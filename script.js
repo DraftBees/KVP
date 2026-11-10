@@ -68,7 +68,7 @@
 
   /* trame dei materiali: generate al volo, nitide a qualsiasi dimensione (niente foto sgranate) */
   function weaveTexture(o) {
-    var S = o.size || (wide.matches ? 1024 : 512), c = document.createElement('canvas'); c.width = c.height = S;
+    var S = o.size || (1024), c = document.createElement('canvas'); c.width = c.height = S;
     var x = c.getContext('2d'), cell = S / o.n, gap = (o.gap || 0.07) * cell;
     x.fillStyle = o.bg; x.fillRect(0, 0, S, S);
     function tow(px, py, w, h, vert, pal) {
@@ -77,13 +77,13 @@
       x.fillStyle = g; x.fillRect(px, py, w, h);
       var wid = vert ? w : h, cnt = Math.max(5, Math.round(wid / 1.5));
       for (var k = 0; k < cnt; k++) {
-        var off = (k + Math.random() * 0.8) * wid / cnt, a = 0.05 + Math.random() * 0.13;
+        var off = (k + Math.random() * 0.8) * wid / cnt, a = 0.035 + Math.random() * 0.07;
         x.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,' + a + ')' : 'rgba(0,0,0,' + a + ')';
         if (vert) x.fillRect(px + off, py, 1.1, h); else x.fillRect(px, py + off, w, 1.1);
       }
       var g2 = vert ? x.createLinearGradient(0, py, 0, py + h) : x.createLinearGradient(px, 0, px + w, 0);
-      g2.addColorStop(0, 'rgba(0,0,0,.66)'); g2.addColorStop(0.15, 'rgba(0,0,0,.06)'); g2.addColorStop(0.5, 'rgba(255,255,255,.05)');
-      g2.addColorStop(0.85, 'rgba(0,0,0,.06)'); g2.addColorStop(1, 'rgba(0,0,0,.66)');
+      g2.addColorStop(0, 'rgba(0,0,0,.22)'); g2.addColorStop(0.15, 'rgba(0,0,0,.06)'); g2.addColorStop(0.5, 'rgba(255,255,255,.05)');
+      g2.addColorStop(0.85, 'rgba(0,0,0,.06)'); g2.addColorStop(1, 'rgba(0,0,0,.22)');
       x.fillStyle = g2; x.fillRect(px, py, w, h);
     }
     var i, j, s;
@@ -95,27 +95,23 @@
     }
     x.globalCompositeOperation = 'soft-light';                    /* luce morbida + lucentezza */
     var rg = x.createRadialGradient(S * 0.3, S * 0.22, S * 0.05, S * 0.5, S * 0.5, S * 0.85);
-    rg.addColorStop(0, 'rgba(255,255,255,.75)'); rg.addColorStop(0.55, 'rgba(128,128,128,.0)'); rg.addColorStop(1, 'rgba(0,0,0,.7)');
+    rg.addColorStop(0, 'rgba(255,255,255,.3)'); rg.addColorStop(0.55, 'rgba(128,128,128,.0)'); rg.addColorStop(1, 'rgba(0,0,0,.7)');
     x.fillStyle = rg; x.fillRect(0, 0, S, S);
     x.globalCompositeOperation = 'source-over';
     for (var q = 0; q < S * 3; q++) { x.fillStyle = 'rgba(' + (Math.random() < 0.5 ? '255,255,255' : '0,0,0') + ',' + (Math.random() * 0.06).toFixed(3) + ')'; x.fillRect(Math.random() * S, Math.random() * S, 1.2, 1.2); }
     return c.toDataURL('image/jpeg', 0.9);
   }
   var twill = function (i, j) { return ((i + j) % 4) < 2; }, plain = function (i, j) { return (i + j) % 2 === 0; };
-  var CARB = { warp: ['#030304', '#171a1f', '#8b96a8'], weft: ['#020203', '#0c0e11', '#333a44'] };
-  var KEV = { warp: ['#7a5400', '#d49f0e', '#ffe58a'], weft: ['#6a4900', '#b58306', '#e9bd3c'] };
-  var GLS = { warp: ['#a7aea5', '#d9ddd3', '#fbfcf8'], weft: ['#9aa299', '#cdd2c8', '#f0f2ea'] };
+  var CARB = { warp: ['#0c0e10', '#24282c', '#4b5055'], weft: ['#090b0d', '#1b1e22', '#383d42'] };
+  var KEV = { warp: ['#806725', '#b49b49', '#d7c47d'], weft: ['#6f5c25', '#a58c3e', '#c8b567'] };
+  var GLS = { warp: ['#a4afa5', '#c3cec4', '#e0e6dc'], weft: ['#96a69c', '#b6c3b8', '#d4ded2'] };
   function foamTexture() {                                      /* schiuma PVC a cellule chiuse */
-    var S = wide.matches ? 1024 : 512, c = document.createElement('canvas'); c.width = c.height = S; var x = c.getContext('2d');
+    var S = 1024, c = document.createElement('canvas'); c.width = c.height = S; var x = c.getContext('2d');
     x.fillStyle = '#c9bf9f'; x.fillRect(0, 0, S, S);
-    for (var q = 0; q < (wide.matches ? 5200 : 1300); q++) {
-      var px = Math.random() * S, py = Math.random() * S, r = 4 + Math.random() * 9;
-      var g = x.createRadialGradient(px - r * 0.3, py - r * 0.3, r * 0.1, px, py, r);
-      var t = 0.82 + Math.random() * 0.3;
-      g.addColorStop(0, 'rgb(' + Math.min(255, 238 * t | 0) + ',' + Math.min(255, 228 * t | 0) + ',' + Math.min(255, 196 * t | 0) + ')');
-      g.addColorStop(0.75, 'rgb(' + (186 * t | 0) + ',' + (174 * t | 0) + ',' + (140 * t | 0) + ')');
-      g.addColorStop(1, 'rgba(92,80,52,.75)');
-      x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 6.2832); x.fill();
+    for (var q = 0; q < 42000; q++) {
+      var px = Math.random() * S, py = Math.random() * S, r = 0.35 + Math.random() * 1.7;
+      x.fillStyle = Math.random() < 0.65 ? 'rgba(95,86,61,.12)' : 'rgba(255,250,225,.32)';
+      x.beginPath(); x.ellipse(px, py, r, r * (0.6 + Math.random() * 0.5), Math.random() * Math.PI, 0, Math.PI * 2); x.fill();
     }
     x.globalCompositeOperation = 'soft-light';
     var rg = x.createRadialGradient(S * 0.3, S * 0.22, S * 0.05, S * 0.5, S * 0.5, S * 0.85);
@@ -124,11 +120,11 @@
     return c.toDataURL('image/jpeg', 0.9);
   }
   window.__tex = {
-    p1: function () { return weaveTexture({ n: 24, rule: plain, warp: GLS.warp, weft: GLS.weft, bg: '#69726c', gap: 0.05 }); },
+    p1: function () { return weaveTexture({ n: 64, rule: plain, warp: GLS.warp, weft: GLS.weft, bg: '#69726c', gap: 0.012 }); },
     p2: foamTexture,
-    p3: function () { return weaveTexture({ n: 30, rule: plain, warp: KEV.warp, weft: KEV.weft, bg: '#2a1c00', gap: 0.06 }); },
-    p4: function () { return weaveTexture({ n: 40, rule: twill, warp: CARB.warp, weft: CARB.weft, bg: '#000', gap: 0.05 }); },
-    p5: function () { return weaveTexture({ n: 34, rule: twill, warp: CARB.warp, weft: KEV.weft, bg: '#120c00', gap: 0.05 }); }
+    p3: function () { return weaveTexture({ n: 72, rule: plain, warp: KEV.warp, weft: KEV.weft, bg: '#2a1c00', gap: 0.012 }); },
+    p4: function () { return weaveTexture({ n: 80, rule: twill, warp: CARB.warp, weft: CARB.weft, bg: '#000', gap: 0.012 }); },
+    p5: function () { return weaveTexture({ n: 72, rule: twill, warp: CARB.warp, weft: KEV.weft, bg: '#120c00', gap: 0.012 }); }
   };
   var EDGE = { 1: '#8d9690', 2: '#b3a987', 3: '#8a6200', 4: '#0b0c0e', 5: '#2b2108' }, THICK = { 1: 7, 2: 22, 3: 7, 4: 8, 5: 8 };
   $$('.ply').forEach(function (p) {
@@ -153,6 +149,7 @@
   var matTitle = $('.mat-title'), matSpans = $$('.mat-title .mt');
   function setPlies(gap, active) {
     var n = plies.length;
+    stack.classList.toggle('has-selection', active >= 0);
     plies.forEach(function (ply, i) {
       var lift = i === active ? gap * 0.35 : 0;
       ply.style.setProperty('--z', ((n - 1 - i) * (gap + 3) + lift) + 'px');
