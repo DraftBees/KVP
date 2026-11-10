@@ -176,7 +176,7 @@
   function layupFrame(H) {
     var bounds = layup.getBoundingClientRect();
     if (bounds.bottom < 0 || bounds.top > H) return;
-    if (reduce) { setPlies(wide.matches ? 70 : 34, -1); items.forEach(function (li) { li.classList.add('on'); }); lend.classList.add('on'); return; }
+    if (reduce) { setPlies(wide.matches ? 70 : 22, -1); items.forEach(function (li) { li.classList.add('on'); }); lend.classList.add('on'); return; }
     if (wide.matches) {
       var r = layup.getBoundingClientRect();
       var p = clamp(-r.top / (r.height - H), 0, 1);
@@ -191,7 +191,7 @@
     /* mobile: la scena è sticky in alto; l'elenco scorre sotto e decide lo strato attivo */
     var stageBox = stage.getBoundingClientRect();
     var cards = items.map(function (li) { return li.getBoundingClientRect(); });
-    var ref = Math.min(stageBox.bottom + 48, H * 0.72);
+    var ref = H <= 540 ? H * 0.4 : Math.min(stageBox.bottom + 48, H * 0.72);
     var nearest = 0, distance = Infinity;
     cards.forEach(function (b, i) {
       var d = Math.abs(b.top - ref);
