@@ -8,7 +8,8 @@
   var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
   var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) { reduce = e.matches; req(); });
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) { reduce = e.matches; refreshGeometry(); });
+  document.documentElement.classList.toggle('webkit-scene', /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Edg/.test(navigator.userAgent));
   var wide = window.matchMedia('(min-width: 861px)');
 
   /* lingua */
@@ -17,6 +18,7 @@
     $$('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.l === l)); });
     document.title = l === 'en' ? 'KVP Composite Materials | Fiberglass, carbon fiber and Kevlar' : 'KVP Composite Materials | Vetroresina, carbonio e Kevlar';
     store.set('kvp-lang', l);
+    document.dispatchEvent(new Event('kvp:language'));
   }
   var q = /[?&]lang=(it|en)/.exec(location.search);
   setLang((q && q[1]) || store.get('kvp-lang') || ((navigator.language || 'it').slice(0, 2) === 'en' ? 'en' : 'it'));
@@ -57,6 +59,7 @@
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
   });
+  $('.bar .logo').addEventListener('click', function () { setNav(false, false); });
   compactNav.addEventListener('change', function () { setNav(false, false); });
   nav.inert = compactNav.matches;
 
@@ -66,70 +69,15 @@
   var panels = $$('.panel'), contact = $('#contatti');
   var MAX_MM = 14.2;
 
-  /* trame dei materiali: generate al volo, nitide a qualsiasi dimensione (niente foto sgranate) */
-  function weaveTexture(o) {
-    var S = o.size || (1024), c = document.createElement('canvas'); c.width = c.height = S;
-    var x = c.getContext('2d'), cell = S / o.n, gap = (o.gap || 0.07) * cell;
-    x.fillStyle = o.bg; x.fillRect(0, 0, S, S);
-    function tow(px, py, w, h, vert, pal) {
-      var g = vert ? x.createLinearGradient(px, 0, px + w, 0) : x.createLinearGradient(0, py, 0, py + h);
-      g.addColorStop(0, pal[0]); g.addColorStop(0.2, pal[1]); g.addColorStop(0.5, pal[2]); g.addColorStop(0.8, pal[1]); g.addColorStop(1, pal[0]);
-      x.fillStyle = g; x.fillRect(px, py, w, h);
-      var wid = vert ? w : h, cnt = Math.max(5, Math.round(wid / 1.5));
-      for (var k = 0; k < cnt; k++) {
-        var off = (k + Math.random() * 0.8) * wid / cnt, a = 0.035 + Math.random() * 0.07;
-        x.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,' + a + ')' : 'rgba(0,0,0,' + a + ')';
-        if (vert) x.fillRect(px + off, py, 1.1, h); else x.fillRect(px, py + off, w, 1.1);
-      }
-      var g2 = vert ? x.createLinearGradient(0, py, 0, py + h) : x.createLinearGradient(px, 0, px + w, 0);
-      g2.addColorStop(0, 'rgba(0,0,0,.22)'); g2.addColorStop(0.15, 'rgba(0,0,0,.06)'); g2.addColorStop(0.5, 'rgba(255,255,255,.05)');
-      g2.addColorStop(0.85, 'rgba(0,0,0,.06)'); g2.addColorStop(1, 'rgba(0,0,0,.22)');
-      x.fillStyle = g2; x.fillRect(px, py, w, h);
-    }
-    var i, j, s;
-    for (j = 0; j < o.n; j++) for (i = 0; i < o.n;) {            /* ordito (verticale) */
-      if (o.rule(i, j)) { s = i; while (i < o.n && o.rule(i, j)) i++; tow(j * cell + gap / 2, s * cell + gap / 2, cell - gap, (i - s) * cell - gap, true, o.warp); } else i++;
-    }
-    for (i = 0; i < o.n; i++) for (j = 0; j < o.n;) {            /* trama (orizzontale) */
-      if (!o.rule(i, j)) { s = j; while (j < o.n && !o.rule(i, j)) j++; tow(s * cell + gap / 2, i * cell + gap / 2, (j - s) * cell - gap, cell - gap, false, o.weft); } else j++;
-    }
-    x.globalCompositeOperation = 'soft-light';                    /* luce morbida + lucentezza */
-    var rg = x.createRadialGradient(S * 0.3, S * 0.22, S * 0.05, S * 0.5, S * 0.5, S * 0.85);
-    rg.addColorStop(0, 'rgba(255,255,255,.3)'); rg.addColorStop(0.55, 'rgba(128,128,128,.0)'); rg.addColorStop(1, 'rgba(0,0,0,.7)');
-    x.fillStyle = rg; x.fillRect(0, 0, S, S);
-    x.globalCompositeOperation = 'source-over';
-    for (var q = 0; q < S * 3; q++) { x.fillStyle = 'rgba(' + (Math.random() < 0.5 ? '255,255,255' : '0,0,0') + ',' + (Math.random() * 0.06).toFixed(3) + ')'; x.fillRect(Math.random() * S, Math.random() * S, 1.2, 1.2); }
-    return c.toDataURL('image/jpeg', 0.9);
-  }
-  var twill = function (i, j) { return ((i + j) % 4) < 2; }, plain = function (i, j) { return (i + j) % 2 === 0; };
-  var CARB = { warp: ['#0c0e10', '#24282c', '#4b5055'], weft: ['#090b0d', '#1b1e22', '#383d42'] };
-  var KEV = { warp: ['#806725', '#b49b49', '#d7c47d'], weft: ['#6f5c25', '#a58c3e', '#c8b567'] };
-  var GLS = { warp: ['#a4afa5', '#c3cec4', '#e0e6dc'], weft: ['#96a69c', '#b6c3b8', '#d4ded2'] };
-  function foamTexture() {                                      /* schiuma PVC a cellule chiuse */
-    var S = 1024, c = document.createElement('canvas'); c.width = c.height = S; var x = c.getContext('2d');
-    x.fillStyle = '#c9bf9f'; x.fillRect(0, 0, S, S);
-    for (var q = 0; q < 42000; q++) {
-      var px = Math.random() * S, py = Math.random() * S, r = 0.35 + Math.random() * 1.7;
-      x.fillStyle = Math.random() < 0.65 ? 'rgba(95,86,61,.12)' : 'rgba(255,250,225,.32)';
-      x.beginPath(); x.ellipse(px, py, r, r * (0.6 + Math.random() * 0.5), Math.random() * Math.PI, 0, Math.PI * 2); x.fill();
-    }
-    x.globalCompositeOperation = 'soft-light';
-    var rg = x.createRadialGradient(S * 0.3, S * 0.22, S * 0.05, S * 0.5, S * 0.5, S * 0.85);
-    rg.addColorStop(0, 'rgba(255,255,255,.6)'); rg.addColorStop(0.55, 'rgba(128,128,128,0)'); rg.addColorStop(1, 'rgba(0,0,0,.6)');
-    x.fillStyle = rg; x.fillRect(0, 0, S, S);
-    return c.toDataURL('image/jpeg', 0.9);
-  }
-  window.__tex = {
-    p1: function () { return weaveTexture({ n: 64, rule: plain, warp: GLS.warp, weft: GLS.weft, bg: '#69726c', gap: 0.012 }); },
-    p2: foamTexture,
-    p3: function () { return weaveTexture({ n: 72, rule: plain, warp: KEV.warp, weft: KEV.weft, bg: '#2a1c00', gap: 0.012 }); },
-    p4: function () { return weaveTexture({ n: 80, rule: twill, warp: CARB.warp, weft: CARB.weft, bg: '#000', gap: 0.012 }); },
-    p5: function () { return weaveTexture({ n: 72, rule: twill, warp: CARB.warp, weft: KEV.weft, bg: '#120c00', gap: 0.012 }); }
-  };
+  /* trame dei materiali: preparate una volta, senza canvas durante la visita. */
   var EDGE = { 1: '#8d9690', 2: '#b3a987', 3: '#8a6200', 4: '#0b0c0e', 5: '#2b2108' }, THICK = { 1: 7, 2: 22, 3: 7, 4: 8, 5: 8 };
   $$('.ply').forEach(function (p) {
     var m = /p([1-5])/.exec(p.className);
-    if (m) { p.style.setProperty('--edge', EDGE[m[1]]); p.style.setProperty('--th', THICK[m[1]] + 'px'); try { p.style.setProperty('--t', 'url(' + window.__tex['p' + m[1]]() + ')'); } catch (e) {} }
+    if (m) {
+      p.style.setProperty('--edge', EDGE[m[1]]);
+      p.style.setProperty('--th', THICK[m[1]] + 'px');
+      p.style.setProperty('--t', 'url(assets/textures/p' + m[1] + (wide.matches ? '-1024.webp)' : '-512.webp)'));
+    }
   });
 
   /* logo KVP estruso: tante copie dello stesso tracciato del marchio, impilate in profondita */
@@ -147,12 +95,19 @@
     }
   }
   var matTitle = $('.mat-title'), matSpans = $$('.mat-title .mt');
+  function logoFlight(amount) {
+    if (!logo3d) return;
+    amount = reduce ? 0 : clamp(amount, 0, 1);
+    logo3d.classList.toggle('logo-away', amount >= 0.995);
+    logo3d.style.setProperty('--logo-flight', (amount * 480).toFixed(1) + 'px');
+    logo3d.style.setProperty('--logo-turn', (amount * -18).toFixed(1) + 'deg');
+  }
   function setPlies(gap, active) {
     var n = plies.length;
     stack.classList.toggle('has-selection', active >= 0);
     plies.forEach(function (ply, i) {
       var lift = i === active ? gap * 0.35 : 0;
-      ply.style.setProperty('--z', ((n - 1 - i) * (gap + 3) + lift) + 'px');
+      ply.style.setProperty('--z', ((n - 1 - i) * (gap + 3) + lift).toFixed(1) + 'px');
       ply.classList.toggle('dim', active > -1 && i !== active);
       ply.classList.toggle('act', i === active);
     });
@@ -170,17 +125,19 @@
   }
 
   function sizeDesktopScene() {
-    if (wide.matches) stack.style.width = Math.min(stage.clientWidth * 0.61, stage.clientHeight * 0.56, 400) + 'px';
+    if (wide.matches && !reduce) stack.style.width = Math.min(stage.clientWidth * 0.61, stage.clientHeight * 0.56, 400) + 'px';
     else stack.style.width = '';
   }
   sizeDesktopScene();
   var stackWidth = stack.offsetWidth;
   var mobileStageHeight = stage.offsetHeight;
+  var mobilePin = $('.layup-pin'), mobilePinTop = parseFloat(getComputedStyle(mobilePin).top) || 60;
+  var mobileTravel = layup.offsetHeight - mobilePin.offsetHeight;
   var mobileProgress = null, motionTime = 0;
   function layupFrame(H) {
     var bounds = layup.getBoundingClientRect();
     if (bounds.bottom < 0 || bounds.top > H) { mobileProgress = null; motionTime = 0; return; }
-    if (reduce) { setPlies(wide.matches ? 70 : 22, -1); items.forEach(function (li) { li.classList.add('on'); }); lend.classList.add('on'); return; }
+    if (reduce) { logoFlight(0); setPlies(wide.matches ? 70 : 22, -1); items.forEach(function (li) { li.classList.add('on'); }); lend.classList.add('on'); return; }
     if (wide.matches) {
       var r = layup.getBoundingClientRect();
       var p = clamp(-r.top / (r.height - H), 0, 1);
@@ -189,6 +146,7 @@
       stack.style.setProperty('--rz', (-36 + p * 8) + 'deg');
       var open = ease(clamp(p / 0.16, 0, 1)), close = ease(clamp((p - 0.86) / 0.1, 0, 1));
       var active = (p > 0.16 && p < 0.86) ? clamp(Math.floor((p - 0.16) / 0.7 * items.length), 0, items.length - 1) : -1;
+      logoFlight(ease(clamp((p - 0.01) / 0.12, 0, 1)) * (1 - ease(clamp((p - 0.87) / 0.12, 0, 1))));
       var desktopGap = gapMax * open * (1 - close);
       setPlies(desktopGap, active);
       stack.style.setProperty('--sy', (desktopGap * 1.8 + 12) + 'px');
@@ -198,8 +156,8 @@
     }
     /* mobile: la scena è sticky in alto; l'elenco scorre sotto e decide lo strato attivo */
     if (window.matchMedia('(min-height: 541px)').matches) {
-      var travel = bounds.height - $('.layup-pin').offsetHeight;
-      var target = clamp((parseFloat(getComputedStyle($('.layup-pin')).top) - bounds.top) / Math.max(1, travel), 0, 1);
+      var travel = mobileTravel;
+      var target = clamp((mobilePinTop - bounds.top) / Math.max(1, travel), 0, 1);
       var now = performance.now(), dt = Math.min(32, now - (motionTime || now - 16));
       motionTime = now;
       if (mobileProgress === null) mobileProgress = target;
@@ -212,6 +170,7 @@
       var closing = ease(clamp((progress - 0.90) / 0.10, 0, 1));
       var active = clamp(Math.floor((progress - 0.13) / 0.77 * items.length), 0, items.length - 1);
       var gap = Math.min(32, mobileStageHeight * 0.065) * opening * (1 - closing);
+      logoFlight(ease(clamp((progress - 0.01) / 0.11, 0, 1)) * (1 - ease(clamp((progress - 0.88) / 0.12, 0, 1))));
       setPlies(gap, progress < 0.10 || closing > 0.6 ? -1 : active);
       stack.style.setProperty('--sy', (gap * 1.8 + 30) + 'px');
       stack.style.setProperty('--rx', (58 + progress * 4) + 'deg');
@@ -220,6 +179,7 @@
       lend.classList.toggle('on', closing > 0.65);
       return;
     }
+    logoFlight(0);
     var stageBox = stage.getBoundingClientRect();
     var cards = items.map(function (li) { return li.getBoundingClientRect(); });
     var ref = H <= 540 ? H * 0.4 : Math.min(stageBox.bottom + 48, H * 0.72);
@@ -237,9 +197,15 @@
   }
 
   var sectorStack = window.matchMedia('(min-height: 541px)');
+  var panelStarts = [], sectorViewport = window.innerHeight;
   function measurePanels() {
-    panels.forEach(function (pn) {
-      pn.style.setProperty('--panel-top', Math.min(60, window.innerHeight - pn.offsetHeight) + 'px');
+    var naturalTop = 0;
+    sectorViewport = !wide.matches && sectorStack.matches && !reduce
+      ? Math.round($('.panel-bg', panels[0]).offsetHeight / 0.48) : window.innerHeight;
+    panels.forEach(function (pn, i) {
+      panelStarts[i] = naturalTop;
+      naturalTop += pn.offsetHeight;
+      pn.style.setProperty('--panel-top', Math.min(60, sectorViewport - pn.offsetHeight) + 'px');
     });
   }
   var sectorResize = new ResizeObserver(function () { measurePanels(); req(); });
@@ -247,24 +213,36 @@
   function panelsFrame(H) {
     var sectorBounds = $('.sectors').getBoundingClientRect();
     if (sectorBounds.top > H || sectorBounds.bottom < 0) return;
-    var boxes = panels.map(function (pn) { return pn.getBoundingClientRect(); });
+    if (panelStarts.length !== panels.length) measurePanels();
+    var boxes = panels.map(function (pn, i) {
+      return { top: sectorBounds.top + panelStarts[i], height: pn.offsetHeight };
+    });
     panels.forEach(function (pn, i) {
       var next = boxes[i + 1];
       var t = !reduce && (wide.matches || sectorStack.matches) && next
-        ? clamp(1 - next.top / H, 0, 1) : 0;
+        ? clamp(1 - next.top / sectorViewport, 0, 1) : 0;
+      pn.classList.toggle('is-covered', !reduce && !!next && next.top <= -sectorViewport);
       pn.style.transform = '';
       pn.style.filter = '';
       pn.style.setProperty('--panel-scale', (1 - 0.045 * t).toFixed(4));
       pn.style.setProperty('--panel-shade', (0.55 * t).toFixed(3));
-      if (boxes[i].bottom < 0 || boxes[i].top > H) return;
+      if (boxes[i].top + boxes[i].height < 0 || boxes[i].top > H) return;
       var mid = (boxes[i].top + boxes[i].height / 2 - H / 2) / H;
       $('.panel-bg', pn).style.transform = reduce ? '' :
         'translate3d(0,' + clamp(mid * -14, -14, 14).toFixed(1) + 'px,0) scale(1.045)';
     });
   }
 
+  var sceneObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) { stack.classList.toggle('scene-sleep', !entry.isIntersecting); });
+  }, { rootMargin: '160px' });
+  sceneObserver.observe(stage);
+
   var panelObserver = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) { entry.target.classList.toggle('in-view', entry.isIntersecting); });
+    entries.forEach(function (entry) { if (entry.isIntersecting) {
+      entry.target.classList.add('in-view'); panelObserver.unobserve(entry.target);
+      var photo = $('.panel-bg', entry.target); if (photo) photo.loading = 'eager';
+    } });
   }, { threshold: 0.12 });
   panels.forEach(function (pn) { panelObserver.observe(pn); });
 
@@ -289,9 +267,21 @@
   }
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   window.addEventListener('scroll', req, { passive: true });
-  window.addEventListener('resize', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; mobileStageHeight = stage.offsetHeight; mobileProgress = null; measurePanels(); req(); });
-  window.addEventListener('load', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; req(); });
-  document.fonts.ready.then(function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; req(); });
+  function refreshGeometry() {
+    sizeDesktopScene(); stackWidth = stack.offsetWidth;
+    mobileStageHeight = stage.offsetHeight;
+    mobileTravel = layup.offsetHeight - mobilePin.offsetHeight;
+    mobilePinTop = parseFloat(getComputedStyle(mobilePin).top) || 60;
+    mobileProgress = null; motionTime = 0;
+    measurePanels(); req();
+  }
+  var sceneResize = new ResizeObserver(refreshGeometry);
+  sceneResize.observe(mobilePin); sceneResize.observe(stage);
+  window.addEventListener('resize', refreshGeometry);
+  window.addEventListener('pageshow', refreshGeometry);
+  document.addEventListener('kvp:language', refreshGeometry);
+  window.addEventListener('load', refreshGeometry);
+  document.fonts.ready.then(refreshGeometry);
   frame();
 
   /* modulo: prepara una mail già compilata */
