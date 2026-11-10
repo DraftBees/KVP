@@ -175,9 +175,11 @@
   }
   sizeDesktopScene();
   var stackWidth = stack.offsetWidth;
+  var mobileStageHeight = stage.offsetHeight;
+  var mobileProgress = null, motionTime = 0;
   function layupFrame(H) {
     var bounds = layup.getBoundingClientRect();
-    if (bounds.bottom < 0 || bounds.top > H) return;
+    if (bounds.bottom < 0 || bounds.top > H) { mobileProgress = null; motionTime = 0; return; }
     if (reduce) { setPlies(wide.matches ? 70 : 22, -1); items.forEach(function (li) { li.classList.add('on'); }); lend.classList.add('on'); return; }
     if (wide.matches) {
       var r = layup.getBoundingClientRect();
@@ -197,11 +199,19 @@
     /* mobile: la scena è sticky in alto; l'elenco scorre sotto e decide lo strato attivo */
     if (window.matchMedia('(min-height: 541px)').matches) {
       var travel = bounds.height - $('.layup-pin').offsetHeight;
-      var progress = clamp((60 - bounds.top) / Math.max(1, travel), 0, 1);
+      var target = clamp((parseFloat(getComputedStyle($('.layup-pin')).top) - bounds.top) / Math.max(1, travel), 0, 1);
+      var now = performance.now(), dt = Math.min(32, now - (motionTime || now - 16));
+      motionTime = now;
+      if (mobileProgress === null) mobileProgress = target;
+      var delta = target - mobileProgress;
+      mobileProgress += clamp(delta * (1 - Math.exp(-dt / 160)), -0.025, 0.025);
+      if (Math.abs(target - mobileProgress) < 0.0004) mobileProgress = target;
+      else req();
+      var progress = mobileProgress;
       var opening = ease(clamp(progress / 0.13, 0, 1));
       var closing = ease(clamp((progress - 0.90) / 0.10, 0, 1));
       var active = clamp(Math.floor((progress - 0.13) / 0.77 * items.length), 0, items.length - 1);
-      var gap = Math.min(32, stage.offsetHeight * 0.065) * opening * (1 - closing);
+      var gap = Math.min(32, mobileStageHeight * 0.065) * opening * (1 - closing);
       setPlies(gap, progress < 0.10 || closing > 0.6 ? -1 : active);
       stack.style.setProperty('--sy', (gap * 1.8 + 30) + 'px');
       stack.style.setProperty('--rx', (58 + progress * 4) + 'deg');
@@ -235,6 +245,8 @@
   var sectorResize = new ResizeObserver(function () { measurePanels(); req(); });
   panels.forEach(function (pn) { sectorResize.observe(pn); });
   function panelsFrame(H) {
+    var sectorBounds = $('.sectors').getBoundingClientRect();
+    if (sectorBounds.top > H || sectorBounds.bottom < 0) return;
     var boxes = panels.map(function (pn) { return pn.getBoundingClientRect(); });
     panels.forEach(function (pn, i) {
       var next = boxes[i + 1];
@@ -277,7 +289,7 @@
   }
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   window.addEventListener('scroll', req, { passive: true });
-  window.addEventListener('resize', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; measurePanels(); req(); });
+  window.addEventListener('resize', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; mobileStageHeight = stage.offsetHeight; mobileProgress = null; measurePanels(); req(); });
   window.addEventListener('load', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; req(); });
   document.fonts.ready.then(function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; req(); });
   frame();

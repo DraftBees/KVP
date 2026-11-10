@@ -465,7 +465,7 @@ html{scroll-padding-top:88px}
 
 /* A single mobile viewport stages the material story, as on desktop. */
 @media (max-width:860px) and (min-height:541px) and (prefers-reduced-motion:no-preference){
-  .layup{height:420svh;background:radial-gradient(ellipse at 50% 35%,#1a242f,var(--ink) 70%)}
+  .layup{height:520svh;background:radial-gradient(ellipse at 50% 35%,#1a242f,var(--ink) 70%)}
   .layup-pin{position:sticky;top:var(--mobile-top);height:calc(100svh - var(--mobile-top));padding:20px var(--gut) 18px;display:grid;
     grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) 154px;overflow:hidden}
   .layup-head{padding:0;position:relative;z-index:3}
@@ -550,3 +550,8 @@ html{scroll-padding-top:88px}
 .ply.act{outline:1px solid #ffe1a0!important}
 .stack.has-selection .logo3d svg{filter:brightness(.5);transition:filter .35s}
 .ply.p0{background:linear-gradient(120deg,#e4e4dc,#f4f2e9 38%,#d5d7cf 74%,#e7e8df)}
+
+/* Touch scrolling drives one interpolated animation, without a second CSS delay. */
+@media (max-width:860px) and (min-height:541px) and (prefers-reduced-motion:no-preference){
+  .ply,.logo3d{transition:outline-color .3s}
+}
