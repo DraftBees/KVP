@@ -106,10 +106,11 @@ h1 .y{color:var(--y)}
 .ply{position:absolute;inset:0;transform-style:preserve-3d;transform:translateZ(var(--z,0px));transition:filter .4s,opacity .4s;background:var(--t) center/cover #222;outline:1px solid rgba(236,232,224,.28);outline-offset:-1px}
 .ply i{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 40%,transparent 60%,rgba(0,0,0,.35))}
 .ply::before,.ply::after{content:"";position:absolute;background:var(--edge,#26282c)}
-.ply::before{left:0;right:0;bottom:0;height:7px;transform-origin:bottom;transform:rotateX(-90deg)}
-.ply::after{top:0;bottom:0;right:0;width:7px;transform-origin:right;transform:rotateY(90deg)}
+.ply::before{left:0;right:0;bottom:0;height:var(--th,7px);transform-origin:bottom;transform:rotateX(-90deg)}
+.ply::after{top:0;bottom:0;right:0;width:var(--th,7px);transform-origin:right;transform:rotateY(90deg)}
 .p0{background:linear-gradient(135deg,#F7F4EE 0%,#E2DDD2 45%,#F4F0E8 60%,#CFC9BD 100%)}
 .p0::before,.p0::after{background:#9C968A;filter:none}
+.ply.act{outline:2px solid var(--y);outline-offset:-2px}
 .ply.dim{filter:brightness(.38) saturate(.6)}
 .plies{display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:0}
 .plies li{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--line);opacity:.28;transition:opacity .4s}

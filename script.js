@@ -50,7 +50,7 @@
       var g = vert ? x.createLinearGradient(px, 0, px + w, 0) : x.createLinearGradient(0, py, 0, py + h);
       g.addColorStop(0, pal[0]); g.addColorStop(0.2, pal[1]); g.addColorStop(0.5, pal[2]); g.addColorStop(0.8, pal[1]); g.addColorStop(1, pal[0]);
       x.fillStyle = g; x.fillRect(px, py, w, h);
-      var wid = vert ? w : h, cnt = Math.round(wid / 1.6);
+      var wid = vert ? w : h, cnt = Math.max(5, Math.round(wid / 1.5));
       for (var k = 0; k < cnt; k++) {
         var off = (k + Math.random() * 0.8) * wid / cnt, a = 0.05 + Math.random() * 0.13;
         x.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,' + a + ')' : 'rgba(0,0,0,' + a + ')';
@@ -77,19 +77,38 @@
     return c.toDataURL('image/jpeg', 0.9);
   }
   var twill = function (i, j) { return ((i + j) % 4) < 2; }, plain = function (i, j) { return (i + j) % 2 === 0; };
-  var CARB = { warp: ['#050607', '#1a1d22', '#7b8594'], weft: ['#040405', '#0f1115', '#3a414b'] };
-  var KEV = { warp: ['#8a6200', '#dca511', '#ffe486'], weft: ['#7a5500', '#bf8c08', '#eec444'] };
-  var GLS = { warp: ['#8f9a93', '#cfd7d1', '#f8faf6'], weft: ['#86918b', '#c0c9c3', '#edf0eb'] };
+  var CARB = { warp: ['#030304', '#171a1f', '#8b96a8'], weft: ['#020203', '#0c0e11', '#333a44'] };
+  var KEV = { warp: ['#7a5400', '#d49f0e', '#ffe58a'], weft: ['#6a4900', '#b58306', '#e9bd3c'] };
+  var GLS = { warp: ['#a7aea5', '#d9ddd3', '#fbfcf8'], weft: ['#9aa299', '#cdd2c8', '#f0f2ea'] };
+  function foamTexture() {                                      /* schiuma PVC a cellule chiuse */
+    var S = 1024, c = document.createElement('canvas'); c.width = c.height = S; var x = c.getContext('2d');
+    x.fillStyle = '#c9bf9f'; x.fillRect(0, 0, S, S);
+    for (var q = 0; q < 5200; q++) {
+      var px = Math.random() * S, py = Math.random() * S, r = 4 + Math.random() * 9;
+      var g = x.createRadialGradient(px - r * 0.3, py - r * 0.3, r * 0.1, px, py, r);
+      var t = 0.82 + Math.random() * 0.3;
+      g.addColorStop(0, 'rgb(' + Math.min(255, 238 * t | 0) + ',' + Math.min(255, 228 * t | 0) + ',' + Math.min(255, 196 * t | 0) + ')');
+      g.addColorStop(0.75, 'rgb(' + (186 * t | 0) + ',' + (174 * t | 0) + ',' + (140 * t | 0) + ')');
+      g.addColorStop(1, 'rgba(92,80,52,.75)');
+      x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 6.2832); x.fill();
+    }
+    x.globalCompositeOperation = 'soft-light';
+    var rg = x.createRadialGradient(S * 0.3, S * 0.22, S * 0.05, S * 0.5, S * 0.5, S * 0.85);
+    rg.addColorStop(0, 'rgba(255,255,255,.6)'); rg.addColorStop(0.55, 'rgba(128,128,128,0)'); rg.addColorStop(1, 'rgba(0,0,0,.6)');
+    x.fillStyle = rg; x.fillRect(0, 0, S, S);
+    return c.toDataURL('image/jpeg', 0.9);
+  }
   window.__tex = {
-    p1: function () { return weaveTexture({ n: 13, rule: plain, warp: GLS.warp, weft: GLS.weft, bg: '#5d6762', gap: 0.06 }); },
-    p2: function () { return weaveTexture({ n: 17, rule: plain, warp: KEV.warp, weft: KEV.weft, bg: '#2a1c00', gap: 0.07 }); },
-    p3: function () { return weaveTexture({ n: 22, rule: twill, warp: CARB.warp, weft: CARB.weft, bg: '#000', gap: 0.06 }); },
-    p4: function () { return weaveTexture({ n: 20, rule: twill, warp: CARB.warp, weft: KEV.weft, bg: '#120c00', gap: 0.06 }); }
+    p1: function () { return weaveTexture({ n: 24, rule: plain, warp: GLS.warp, weft: GLS.weft, bg: '#69726c', gap: 0.05 }); },
+    p2: foamTexture,
+    p3: function () { return weaveTexture({ n: 30, rule: plain, warp: KEV.warp, weft: KEV.weft, bg: '#2a1c00', gap: 0.06 }); },
+    p4: function () { return weaveTexture({ n: 40, rule: twill, warp: CARB.warp, weft: CARB.weft, bg: '#000', gap: 0.05 }); },
+    p5: function () { return weaveTexture({ n: 34, rule: twill, warp: CARB.warp, weft: KEV.weft, bg: '#120c00', gap: 0.05 }); }
   };
+  var EDGE = { 1: '#8d9690', 2: '#b3a987', 3: '#8a6200', 4: '#0b0c0e', 5: '#2b2108' }, THICK = { 1: 7, 2: 22, 3: 7, 4: 8, 5: 8 };
   $$('.ply').forEach(function (p) {
-    var m = /p([1-4])/.exec(p.className);
-    var EDGE = { 1: '#8d9690', 2: '#8a6200', 3: '#0b0c0e', 4: '#2b2108' };
-    if (m) { p.style.setProperty('--edge', EDGE[m[1]]); try { p.style.setProperty('--t', 'url(' + window.__tex['p' + m[1]]() + ')'); } catch (e) {} }
+    var m = /p([1-5])/.exec(p.className);
+    if (m) { p.style.setProperty('--edge', EDGE[m[1]]); p.style.setProperty('--th', THICK[m[1]] + 'px'); try { p.style.setProperty('--t', 'url(' + window.__tex['p' + m[1]]() + ')'); } catch (e) {} }
   });
 
   /* logo KVP estruso: tante copie dello stesso tracciato del marchio, impilate in profondita */
@@ -113,6 +132,7 @@
       var lift = i === active ? gap * 0.35 : 0;
       ply.style.setProperty('--z', ((n - 1 - i) * (gap + 3) + lift) + 'px');
       ply.classList.toggle('dim', active > -1 && i !== active);
+      ply.classList.toggle('act', i === active);
     });
     stack.style.setProperty('--sy', (gap * (wide.matches ? 2.3 : 1.2) + 8) + 'px');
     var sw = stack.offsetWidth, topZ = (n - 1) * (gap + 3) + (active === 0 ? gap * 0.35 : 0);
