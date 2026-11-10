@@ -172,6 +172,11 @@
     }
   }
 
+  function sizeDesktopScene() {
+    if (wide.matches) stack.style.width = Math.min(stage.clientWidth * 0.61, stage.clientHeight * 0.56, 400) + 'px';
+    else stack.style.width = '';
+  }
+  sizeDesktopScene();
   var stackWidth = stack.offsetWidth;
   function layupFrame(H) {
     var bounds = layup.getBoundingClientRect();
@@ -180,12 +185,14 @@
     if (wide.matches) {
       var r = layup.getBoundingClientRect();
       var p = clamp(-r.top / (r.height - H), 0, 1);
-      var gapMax = Math.min(76, stackWidth * 0.17, H * 0.085);
+      var gapMax = Math.min(62, stackWidth * 0.15, stage.offsetHeight * 0.055);
       stack.style.setProperty('--rx', (58 + p * 4) + 'deg');
       stack.style.setProperty('--rz', (-36 + p * 8) + 'deg');
       var open = ease(clamp(p / 0.16, 0, 1)), close = ease(clamp((p - 0.86) / 0.1, 0, 1));
       var active = (p > 0.16 && p < 0.86) ? clamp(Math.floor((p - 0.16) / 0.7 * items.length), 0, items.length - 1) : -1;
-      setPlies(gapMax * open * (1 - close), active);
+      var desktopGap = gapMax * open * (1 - close);
+      setPlies(desktopGap, active);
+      stack.style.setProperty('--sy', (desktopGap * 1.8 + 12) + 'px');
       items.forEach(function (li, i) { li.classList.toggle('on', active === -1 ? (close > 0.5 || p < 0.16) : i === active); });
       lend.classList.toggle('on', close > 0.6);
       return;
@@ -273,8 +280,9 @@
   }
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   window.addEventListener('scroll', req, { passive: true });
-  window.addEventListener('resize', function () { stackWidth = stack.offsetWidth; measurePanels(); req(); });
-  window.addEventListener('load', req);
+  window.addEventListener('resize', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; measurePanels(); req(); });
+  window.addEventListener('load', function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; req(); });
+  document.fonts.ready.then(function () { sizeDesktopScene(); stackWidth = stack.offsetWidth; req(); });
   frame();
 
   /* modulo: prepara una mail già compilata */

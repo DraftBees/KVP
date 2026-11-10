@@ -532,3 +532,12 @@ html{scroll-padding-top:88px}
   .panel{transform:none!important;position:relative}
   .panel::before{opacity:0}
 }
+@media (min-width:861px) and (max-height:760px){
+  .layup-pin{padding-top:88px;padding-bottom:24px}
+  .layup-head h2{font-size:clamp(2.5rem,4vw,4rem)}
+  .plies{gap:0}
+  .plies li{padding:6px 0;grid-template-columns:32px 1fr;gap:10px}
+  .plies h3{font-size:1.25rem;margin-bottom:3px}
+  .plies p{font-size:12px;line-height:1.35}
+  .layup-end{bottom:24px;font-size:1.6rem}
+}
