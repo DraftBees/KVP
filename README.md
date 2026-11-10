@@ -1,4 +1,8 @@
-# Sito KVP Composite Materials (proposta di rifacimento)
+# Sito KVP Composite Materials (proposta di rifacimento, v4 "Strato dopo strato")
 Sito statico bilingue IT/EN. Avvio locale: `python3 -m http.server 4311` in questa cartella → http://localhost:4311
-- Testi: presi dal sito attuale (kvpvetroresina.it), riscritti e tradotti. Foto e loghi cliente: dal sito attuale.
-- Da confermare con l'azienda: anni di esperienza (il sito attuale dice 30, 35 e 40 in pagine diverse; qui si citano solo date precise: 1992 e 1996), partita IVA, privacy/cookie, destinazione del modulo (ora apre la mail).
+
+- Idea: il composito è fatto di strati. Scena centrale = laminato esploso in 3D (CSS) guidato dallo scroll; spessimetro fisso a destra; settori a pannelli che si impilano.
+- Font: Big Shoulders Display + IBM Plex Sans/Mono. Colori: mare scuro #0A0D11, osso #ECE8E0, giallo KVP #FFC71E.
+- Foto: `assets/` = foto vere KVP (dal sito attuale); `assets/u/` = foto di repertorio da Unsplash (licenza Unsplash, uso commerciale libero). Da sostituire con foto vere quando possibile.
+- Da confermare con l'azienda: anni di esperienza, partita IVA, privacy/cookie, destinazione del modulo (ora apre la mail).
+- Versioni precedenti nei commit git.

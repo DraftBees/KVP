@@ -5,273 +5,257 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>KVP Composite Materials | Vetroresina, carbonio e Kevlar</title>
 <meta name="description" content="Componenti su misura in vetroresina, fibra di carbonio, Kevlar e materiali ibridi per nautica, motorsport e industria. Produzione e manutenzione da Busalla (Genova). Certificata UNI EN ISO 9001:2015.">
-<meta name="theme-color" content="#E8E6E0">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23111'/%3E%3Cpath d='M17 14v36M45 14L25 34M31 29l16 21' stroke='%23FFC71E' stroke-width='8' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0A0D11">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230A0D11'/%3E%3Cpath d='M17 14v36M45 14L25 34M31 29l16 21' stroke='%23FFC71E' stroke-width='8' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/u/hull.jpg">
+<link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 <a class="skip" href="#main"><span class="it">Vai ai contenuti</span><span class="en">Skip to content</span></a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="kmark" viewBox="0 0 250 120"><g fill="none" stroke="currentColor" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"><path d="M22 18V100"/><path d="M74 18L28 62"/><path d="M46 54L78 100"/><path d="M106 18L142 100L178 18"/><path d="M204 18V100"/><path d="M204 18H210A24 24 0 0 1 210 66H204"/></g></symbol></svg>
 
-<div class="meta"><div class="wrap">
-  <span>KVP Vetroresina S.r.l.</span>
-  <span class="hide-s">Busalla (GE) · 44°34′N 8°57′E</span>
-  <span class="hide-s">UNI EN ISO 9001:2015</span>
-  <a href="tel:+390109648700">+39 010 9648700</a>
-</div></div>
+<!-- spessimetro: lo "spessore" del laminato cresce mentre scorri -->
+<div class="gauge" aria-hidden="true">
+  <span class="g-lab"><span class="it">Spessore</span><span class="en">Thickness</span></span>
+  <span class="g-track"><span class="g-fill" id="gfill"></span></span>
+  <span class="g-val"><b id="gval">0.00</b> mm</span>
+</div>
 
-<header class="bar" id="bar"><div class="wrap">
-  <a class="logo" href="#top" aria-label="KVP Composite Materials, inizio pagina"><svg viewBox="0 0 250 120" aria-hidden="true"><use href="#kmark"/></svg><span>Composite<br>Materials</span></a>
+<header class="bar" id="bar">
+  <a class="logo" href="#top" aria-label="KVP Composite Materials, inizio pagina"><svg viewBox="0 0 250 120" aria-hidden="true"><use href="#kmark"/></svg></a>
   <nav id="nav" aria-label="Principale">
+    <a href="#laminato"><span class="it">Materiali</span><span class="en">Materials</span></a>
     <a href="#settori"><span class="it">Settori</span><span class="en">Sectors</span></a>
-    <a href="#materiali"><span class="it">Materiali</span><span class="en">Materials</span></a>
     <a href="#metodo"><span class="it">Metodo</span><span class="en">Method</span></a>
     <a href="#qualita"><span class="it">Certificazioni</span><span class="en">Certifications</span></a>
-    <a href="#referenze"><span class="it">Referenze</span><span class="en">References</span></a>
     <a href="#contatti"><span class="it">Contatti</span><span class="en">Contact</span></a>
   </nav>
-  <div class="lang" role="group" aria-label="Lingua / Language"><button data-l="it" aria-pressed="true">IT</button><button data-l="en" aria-pressed="false">EN</button></div>
-  <a class="quote" href="#contatti"><span class="it">Preventivo</span><span class="en">Get a quote</span> <span aria-hidden="true">→</span></a>
-  <button class="burger" id="burger" aria-expanded="false" aria-controls="nav">Menu</button>
-</div></header>
+  <div class="lang" role="group" aria-label="Lingua / Language"><button data-l="it" aria-pressed="true">IT</button><span aria-hidden="true">/</span><button data-l="en" aria-pressed="false">EN</button></div>
+  <a class="quote" href="#contatti"><span class="it">Preventivo</span><span class="en">Quote</span></a>
+  <button class="burger" id="burger" aria-expanded="false" aria-controls="nav"><span></span><span></span><b class="sr">Menu</b></button>
+</header>
 
 <main id="main">
-<!-- HERO — layout ispirato a "Editorial Hero" (21st.dev): tagline a sinistra, titolo e testo a destra, immagine a tutta larghezza sotto -->
+
+<!-- 1 · APERTURA -->
 <section class="hero" id="top" aria-labelledby="h1">
-  <div class="wrap hero-grid">
-    <p class="tag mono"><span class="it">[ Laminazione · Stampi · Riparazioni ]<br>Busalla, Genova — dal 1992</span><span class="en">[ Lamination · Molds · Repairs ]<br>Busalla, Genoa — since 1992</span></p>
-    <div class="hero-txt">
-      <h1 id="h1"><span class="it">Vetroresina, carbonio e Kevlar, <mark>su misura.</mark></span><span class="en">Fiberglass, carbon and Kevlar, <mark>made to measure.</mark></span></h1>
-      <p class="lead"><span class="it">Progettiamo, stampiamo e ripariamo componenti in composito per navi da crociera, team di corsa e impianti industriali. Dal pezzo unico alla serie, in officina o direttamente a bordo.</span><span class="en">We design, mold and repair composite components for cruise ships, racing teams and industrial plants. From one-off parts to series, in our workshop or directly on board.</span></p>
-      <div class="cta">
-        <a class="btn" href="#contatti"><span class="it">Richiedi un preventivo</span><span class="en">Request a quote</span><span aria-hidden="true">→</span></a>
-        <a class="link" href="#settori"><span class="it">Cosa facciamo</span><span class="en">What we do</span></a>
-      </div>
+  <img class="hero-bg" src="assets/u/hull.jpg" alt="" fetchpriority="high">
+  <div class="hero-in">
+    <p class="kicker mono"><span class="it">KVP Composite Materials · Busalla, Genova</span><span class="en">KVP Composite Materials · Busalla, Genoa</span></p>
+    <h1 id="h1"><span class="ln"><span class="it">Strato</span><span class="en">Layer</span></span><span class="ln"><span class="it">dopo</span><span class="en">by</span></span><span class="ln y"><span class="it">strato.</span><span class="en">layer.</span></span></h1>
+    <div class="hero-foot">
+      <p><span class="it">Componenti in vetroresina, carbonio e Kevlar per chi va per mare, in pista e negli impianti. Li progettiamo, li laminiamo e li ripariamo, anche a bordo.</span><span class="en">Fiberglass, carbon and Kevlar components for the sea, the track and the plant. We design, laminate and repair them, on board too.</span></p>
+      <a class="scroll-cue mono" href="#laminato"><span class="it">Scorri per aprire il laminato</span><span class="en">Scroll to open the laminate</span><i aria-hidden="true"></i></a>
     </div>
   </div>
-  <figure class="hero-img">
-    <img src="assets/radome.jpg" alt="Tecnico KVP in tuta protettiva al lavoro su un componente in fibra di carbonio" width="1600" height="1067" fetchpriority="high">
-    <figcaption class="mono"><span>FIG. 01</span><span class="it">Riparazione di un componente in carbonio, reparto di Busalla</span><span class="en">Carbon component repair, Busalla workshop</span></figcaption>
-  </figure>
 </section>
 
-<!-- IN BREVE -->
-<section class="facts" aria-label="In breve">
-  <div class="wrap">
-    <dl>
-      <div><dt class="mono">ISO</dt><dd><b>9001:2015</b><span class="it">Sistema qualità certificato</span><span class="en">Certified quality system</span></dd></div>
-      <div><dt class="mono">1992</dt><dd><b class="it">Impiantistica GRP</b><b class="en">GRP plant work</b><span class="it">Linee in vetroresina di ogni diametro</span><span class="en">Fiberglass lines of any diameter</span></dd></div>
-      <div><dt class="mono">1996</dt><dd><b class="it">Unità igieniche navali</b><b class="en">Marine hygiene units</b><span class="it">Serie per i fornitori Fincantieri</span><span class="en">Series for Fincantieri suppliers</span></dd></div>
-      <div><dt class="mono">×3</dt><dd><b>Type Approval</b><span class="it">Tubazioni e rivestimenti per uso navale</span><span class="en">Piping and coatings for marine use</span></dd></div>
-    </dl>
+<!-- 2 · DICHIARAZIONE -->
+<section class="intro" aria-label="Chi siamo">
+  <div class="intro-txt">
+    <p class="mono k">ISO 9001:2015 · REACH · Type Approval</p>
+    <p class="big"><span class="it">Una barca, una carrozzeria da GT, un serbatoio per acidi. Fuori sembrano cose diverse. <em>Dentro sono la stessa cosa:</em> fibre e resina, posate a mano nell'ordine giusto.</span><span class="en">A boat, a GT bodywork, a tank for acids. From the outside they look different. <em>Inside they're the same thing:</em> fibers and resin, laid by hand in the right order.</span></p>
+  </div>
+  <figure class="intro-img"><img src="assets/u/carbon-edge.jpg" alt="" loading="lazy"></figure>
+</section>
+
+<!-- 3 · LAMINATO ESPLOSO (scena guidata dallo scroll) -->
+<section class="layup" id="laminato" aria-labelledby="h-lam">
+  <div class="layup-pin">
+    <div class="layup-head">
+      <p class="mono k"><span class="it">01 — Materiali</span><span class="en">01 — Materials</span></p>
+      <h2 id="h-lam"><span class="it">Cosa c'è dentro<br>un pezzo KVP.</span><span class="en">What's inside<br>a KVP part.</span></h2>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="stack" id="stack">
+        <div class="ply p0"><i></i></div>
+        <div class="ply p1" style="--t:url(assets/t-glass.png)"><i></i></div>
+        <div class="ply p2" style="--t:url(assets/t-kevlar.png)"><i></i></div>
+        <div class="ply p3" style="--t:url(assets/t-carbon.png)"><i></i></div>
+        <div class="ply p4" style="--t:url(assets/t-hybrid.png)"><i></i></div>
+      </div>
+    </div>
+    <ol class="plies" id="plies">
+      <li data-p="0"><span class="mono">L1</span><div><h3>Gelcoat</h3><p><span class="it">La pelle del pezzo: colore, finitura e prima difesa da acqua e sole.</span><span class="en">The part's skin: color, finish and first defense against water and sun.</span></p></div></li>
+      <li data-p="1"><span class="mono">L2</span><div><h3><span class="it">Vetroresina</span><span class="en">Fiberglass</span></h3><p><span class="it">Leggerezza, rigidità strutturale e convenienza. Va bene per quasi tutto.</span><span class="en">Lightness, structural rigidity and value. Right for almost everything.</span></p></div></li>
+      <li data-p="2"><span class="mono">L3</span><div><h3>Kevlar</h3><p><span class="it">Eccezionale resistenza agli urti, dove servono protezione e sicurezza.</span><span class="en">Exceptional impact resistance, where protection and safety matter.</span></p></div></li>
+      <li data-p="3"><span class="mono">L4</span><div><h3><span class="it">Carbonio</span><span class="en">Carbon</span></h3><p><span class="it">Massima leggerezza e rigidità: motorsport, automotive, aeronautica.</span><span class="en">Maximum lightness and stiffness: motorsport, automotive, aeronautics.</span></p></div></li>
+      <li data-p="4"><span class="mono">L5</span><div><h3><span class="it">Ibridi</span><span class="en">Hybrids</span></h3><p><span class="it">Fibre combinate per bilanciare costi, prestazioni e specifiche.</span><span class="en">Combined fibers to balance cost, performance and specs.</span></p></div></li>
+    </ol>
+    <p class="layup-end" id="lend"><span class="it">= un componente. Su misura, dal prototipo alla serie.</span><span class="en">= one component. Made to measure, from prototype to series.</span></p>
   </div>
 </section>
 
-<!-- SETTORI — pattern "Scroll 01" (21st.dev): immagine sticky che cambia mentre scorrono i testi -->
+<!-- 4 · SETTORI: pannelli a tutto schermo che si impilano -->
 <section class="sectors" id="settori" aria-labelledby="h-set">
-  <div class="wrap">
-    <header class="sh">
-      <p class="num mono">01 / <span class="it">Settori</span><span class="en">Sectors</span></p>
-      <h2 id="h-set"><span class="it">Quattro settori.<br>Lo stesso banco di lavoro.</span><span class="en">Four sectors.<br>The same workbench.</span></h2>
-    </header>
-    <div class="scroll01">
-      <div class="stage" aria-hidden="true">
-        <figure class="on" data-i="0"><img src="assets/marine.jpg" alt="" loading="lazy"><figcaption class="mono">FIG. 02 — <span class="it">Ripristino di superfici interne</span><span class="en">Interior surface restoration</span></figcaption></figure>
-        <figure data-i="1"><img src="assets/motorsport.jpg" alt="" loading="lazy"><figcaption class="mono">FIG. 03 — <span class="it">Vettura da competizione in assistenza</span><span class="en">Race car in service</span></figcaption></figure>
-        <figure data-i="2"><img src="assets/raccordo.jpg" alt="" loading="lazy" style="object-position:50% 45%"><figcaption class="mono">FIG. 04 — <span class="it">Derivazione a T in vetroresina con flange</span><span class="en">GRP tee with flanges</span></figcaption></figure>
-        <figure data-i="3"><img src="assets/tubi.jpg" alt="" loading="lazy"><figcaption class="mono">FIG. 05 — <span class="it">Struttura speciale su disegno</span><span class="en">Special structure to drawing</span></figcaption></figure>
-        <div class="stage-n mono"><span id="stage-n">01</span>/04</div>
-      </div>
-      <div class="items">
-        <article class="item" data-i="0" id="nautica">
-          <img class="m-img" src="assets/marine.jpg" alt="" loading="lazy">
-          <p class="mono k">A — <span class="it">Nautica</span><span class="en">Marine</span></p>
-          <h3><span class="it">Dalle navi da crociera alla nautica da diporto.</span><span class="en">From cruise ships to leisure craft.</span></h3>
-          <ul>
-            <li><b class="it">Unità igieniche</b><b class="en">Hygiene units</b><span class="it">Costruite dal 1996: per oltre dieci anni serie per i principali fornitori Fincantieri, oggi ripristino direttamente a bordo.</span><span class="en">Built since 1996: over ten years of series for Fincantieri's main suppliers, today restored directly on board.</span></li>
-            <li><b class="it">Arredi e resinature a spessore</b><b class="en">Furnishings and thick resin coatings</b><span class="it">Banchi bar, reception e tavoli in marmo per le aree hotel.</span><span class="en">Bar counters, receptions and marble tables for hotel areas.</span></li>
-            <li><b class="it">Lance di salvataggio e tender</b><b class="en">Lifeboats and tenders</b><span class="it">Ricondizionamento completo in cantieri di tutto il mondo.</span><span class="en">Complete reconditioning at shipyards worldwide.</span></li>
-            <li><b class="it">Tubazioni e anticorrosione</b><b class="en">Piping and anti-corrosion</b><span class="it">Sala macchine e linee di zavorra.</span><span class="en">Engine rooms and ballast lines.</span></li>
-          </ul>
-        </article>
-        <article class="item" data-i="1" id="motorsport">
-          <img class="m-img" src="assets/motorsport.jpg" alt="" loading="lazy">
-          <p class="mono k">B — Automotive &amp; motorsport</p>
-          <h3><span class="it">Carrozzerie da corsa, in pista e in officina.</span><span class="en">Race bodywork, trackside and in the workshop.</span></h3>
-          <ul>
-            <li><b class="it">Carrozzeria da competizione</b><b class="en">Race bodywork</b><span class="it">Costruzione e riparazione in carbonio, Kevlar, vetroresina e ibridi.</span><span class="en">Build and repair in carbon, Kevlar, fiberglass and hybrids.</span></li>
-            <li><b class="it">Assistenza ai team</b><b class="en">Team support</b><span>Lamborghini Super Trofeo, International GT Open, Formula 4, <span class="it">Campionato Italiano GT</span><span class="en">Italian GT Championship</span>, Ferrari Challenge.</span></li>
-            <li><b class="it">Auto d'epoca</b><b class="en">Classic cars</b><span class="it">Parti di carrozzeria riprodotte da un'ampia raccolta di stampi.</span><span class="en">Body parts reproduced from a large library of molds.</span></li>
-            <li><b class="it">Prototipi</b><b class="en">Prototypes</b><span class="it">Dal render al modello, allo stampo, alla produzione.</span><span class="en">From render to model, to mold, to production.</span></li>
-          </ul>
-        </article>
-        <article class="item" data-i="2" id="industria">
-          <img class="m-img" src="assets/raccordo.jpg" alt="" loading="lazy">
-          <p class="mono k">C — <span class="it">Industria</span><span class="en">Industrial</span></p>
-          <h3><span class="it">Serbatoi, linee e rivestimenti per fluidi aggressivi.</span><span class="en">Tanks, lines and linings for aggressive fluids.</span></h3>
-          <ul>
-            <li><b class="it">Serbatoi in vetroresina</b><b class="en">Fiberglass tanks</b><span class="it">Energia, chimico e petrolchimico; riparazione del rivestimento interno.</span><span class="en">Energy, chemical and petrochemical; internal liner repair.</span></li>
-            <li><b class="it">Rivestimenti protettivi</b><b class="en">Protective linings</b><span class="it">Su serbatoi, vasche in metallo o calcestruzzo e tubazioni corrose.</span><span class="en">On tanks, metal or concrete basins and corroded piping.</span></li>
-            <li><b class="it">Impiantistica dal 1992</b><b class="en">Plant work since 1992</b><span class="it">Linee in GRP, PP, PVC e PEAD. Montatori certificati AMERON per l'epossidico antincendio.</span><span class="en">Lines in GRP, PP, PVC and HDPE. AMERON-certified fitters for epoxy fire-fighting lines.</span></li>
-            <li><b class="it">Difesa e reti civili</b><b class="en">Defense and civil networks</b><span class="it">Contenitori tecnici e tubazioni di grande diametro per fogne e acquedotti.</span><span class="en">Technical containers and large-diameter sewer and water pipes.</span></li>
-          </ul>
-        </article>
-        <article class="item" data-i="3" id="custom">
-          <img class="m-img" src="assets/tubi.jpg" alt="" loading="lazy">
-          <p class="mono k">D — <span class="it">Su misura</span><span class="en">Custom</span></p>
-          <h3><span class="it">Se non esiste un disegno, lo rileviamo noi.</span><span class="en">If there's no drawing, we survey it ourselves.</span></h3>
-          <ul>
-            <li><b class="it">Pezzi unici</b><b class="en">One-off parts</b><span class="it">Da disegni, modelli o semplici idee.</span><span class="en">From drawings, models or simple ideas.</span></li>
-            <li><b class="it">Mimetizzazioni</b><b class="en">Concealments</b><span class="it">Contenitori per apparati di comunicazione che replicano l'ambiente circostante.</span><span class="en">Enclosures for communication equipment that mimic their surroundings.</span></li>
-            <li><b class="it">Unità navali militari</b><b class="en">Naval vessels</b><span class="it">Boccaporti, scale, supporti antenna, oblò, rilevati a bordo.</span><span class="en">Hatches, ladders, antenna mounts, portholes, surveyed on board.</span></li>
-            <li><b class="it">Strutture speciali</b><b class="en">Special structures</b><span class="it">Attrezzature su progetto del cliente.</span><span class="en">Equipment to the client's design.</span></li>
-          </ul>
-        </article>
+  <h2 id="h-set" class="sr"><span class="it">Settori</span><span class="en">Sectors</span></h2>
+
+  <article class="panel" id="nautica">
+    <img class="panel-bg" src="assets/u/cruise.jpg" alt="" loading="lazy">
+    <div class="panel-in">
+      <p class="mono k">02 — <span class="it">Settori</span><span class="en">Sectors</span> · 1/4</p>
+      <h3 class="word"><span class="it">Mare</span><span class="en">Sea</span></h3>
+      <div class="panel-grid">
+        <p class="lead"><span class="it">Dalle navi da crociera alla nautica da diporto. Dal 1996 costruiamo unità igieniche: per oltre dieci anni in serie per i principali fornitori Fincantieri, oggi le ripristiniamo direttamente a bordo.</span><span class="en">From cruise ships to leisure craft. We've built hygiene units since 1996: for over ten years in series for Fincantieri's main suppliers, and today we restore them directly on board.</span></p>
+        <ul>
+          <li><span class="it">Arredi e resinature a spessore per le aree hotel</span><span class="en">Furnishings and thick resin coatings for hotel areas</span></li>
+          <li><span class="it">Lance di salvataggio, tender e rescue boat, in cantieri di tutto il mondo</span><span class="en">Lifeboats, tenders and rescue boats, at shipyards worldwide</span></li>
+          <li><span class="it">Tubazioni GRP e anticorrosione per sala macchine e zavorra</span><span class="en">GRP piping and anti-corrosion for engine rooms and ballast</span></li>
+        </ul>
+        <figure class="inset"><img src="assets/marine.jpg" alt="Ripristino di superfici interne a bordo" loading="lazy"><figcaption class="mono"><span class="it">Dal nostro reparto</span><span class="en">From our crew</span></figcaption></figure>
       </div>
     </div>
-  </div>
-</section>
+  </article>
 
-<!-- MATERIALI — scheda tecnica -->
-<section class="mats" id="materiali" aria-labelledby="h-mat">
-  <div class="wrap">
-    <header class="sh">
-      <p class="num mono">02 / <span class="it">Materiali</span><span class="en">Materials</span></p>
-      <h2 id="h-mat"><span class="it">Quattro fibre.<br>Una scelta per ogni carico.</span><span class="en">Four fibers.<br>One choice for every load.</span></h2>
-    </header>
-    <div class="sheet" role="table" aria-label="Materiali">
-      <div class="row head mono" role="row"><span role="columnheader">Ref.</span><span role="columnheader"><span class="it">Trama</span><span class="en">Weave</span></span><span role="columnheader"><span class="it">Materiale</span><span class="en">Material</span></span><span role="columnheader"><span class="it">Punto di forza</span><span class="en">Strength</span></span><span role="columnheader"><span class="it">Dove lo usiamo</span><span class="en">Where we use it</span></span></div>
-      <div class="row" role="row"><span class="mono" role="cell">GF-01</span><span role="cell"><i class="sw" style="background-image:url(assets/t-glass.png)"></i></span><b role="cell"><span class="it">Vetroresina</span><span class="en">Fiberglass</span></b><span role="cell"><span class="it">Leggerezza, rigidità strutturale e convenienza.</span><span class="en">Lightness, structural rigidity and value.</span></span><span role="cell"><span class="it">Ogni settore</span><span class="en">Every sector</span></span></div>
-      <div class="row" role="row"><span class="mono" role="cell">CF-02</span><span role="cell"><i class="sw" style="background-image:url(assets/t-carbon.png)"></i></span><b role="cell"><span class="it">Fibra di carbonio</span><span class="en">Carbon fiber</span></b><span role="cell"><span class="it">Massima leggerezza e rigidità.</span><span class="en">Maximum lightness and stiffness.</span></span><span role="cell"><span class="it">Automotive, motorsport, aeronautica</span><span class="en">Automotive, motorsport, aeronautics</span></span></div>
-      <div class="row" role="row"><span class="mono" role="cell">AR-03</span><span role="cell"><i class="sw" style="background-image:url(assets/t-kevlar.png)"></i></span><b role="cell">Kevlar</b><span role="cell"><span class="it">Eccezionale resistenza agli urti.</span><span class="en">Exceptional impact resistance.</span></span><span role="cell"><span class="it">Protezione e sicurezza</span><span class="en">Protection and safety</span></span></div>
-      <div class="row" role="row"><span class="mono" role="cell">HY-04</span><span role="cell"><i class="sw" style="background-image:url(assets/t-hybrid.png)"></i></span><b role="cell"><span class="it">Ibridi</span><span class="en">Hybrids</span></b><span role="cell"><span class="it">Fibre combinate per bilanciare costi e prestazioni.</span><span class="en">Combined fibers to balance cost and performance.</span></span><span role="cell"><span class="it">Specifiche tecniche particolari</span><span class="en">Special technical specs</span></span></div>
+  <article class="panel" id="motorsport">
+    <img class="panel-bg" src="assets/u/night-race.jpg" alt="" loading="lazy">
+    <div class="panel-in">
+      <p class="mono k">02 — <span class="it">Settori</span><span class="en">Sectors</span> · 2/4</p>
+      <h3 class="word"><span class="it">Pista</span><span class="en">Track</span></h3>
+      <div class="panel-grid">
+        <p class="lead"><span class="it">Costruiamo e ripariamo carrozzerie da corsa in carbonio, Kevlar, vetroresina e ibridi, e assistiamo i team durante la stagione: Lamborghini Super Trofeo, International GT Open, Formula 4, Campionato Italiano GT, Ferrari Challenge.</span><span class="en">We build and repair race bodywork in carbon, Kevlar, fiberglass and hybrids, and support teams through the season: Lamborghini Super Trofeo, International GT Open, Formula 4, Italian GT Championship, Ferrari Challenge.</span></p>
+        <ul>
+          <li><span class="it">Auto d'epoca: parti riprodotte da un'ampia raccolta di stampi</span><span class="en">Classic cars: parts reproduced from a large mold library</span></li>
+          <li><span class="it">Prototipi: dal render al modello, allo stampo, alla serie</span><span class="en">Prototypes: from render to model, to mold, to series</span></li>
+        </ul>
+        <figure class="inset"><img src="assets/motorsport.jpg" alt="Vettura da competizione in assistenza da KVP" loading="lazy"><figcaption class="mono"><span class="it">Dal nostro reparto</span><span class="en">From our crew</span></figcaption></figure>
+      </div>
     </div>
-  </div>
+  </article>
+
+  <article class="panel" id="industria">
+    <img class="panel-bg" src="assets/u/pipes.jpg" alt="" loading="lazy">
+    <div class="panel-in">
+      <p class="mono k">02 — <span class="it">Settori</span><span class="en">Sectors</span> · 3/4</p>
+      <h3 class="word"><span class="it">Impianti</span><span class="en">Plants</span></h3>
+      <div class="panel-grid">
+        <p class="lead"><span class="it">Serbatoi in vetroresina per fluidi anche molto corrosivi, rivestimenti protettivi su vasche e tubazioni, e linee in GRP di ogni dimensione dal 1992: energia, chimico, petrolchimico.</span><span class="en">Fiberglass tanks for even highly corrosive fluids, protective linings on basins and piping, and GRP lines of any size since 1992: energy, chemical, petrochemical.</span></p>
+        <ul>
+          <li><span class="it">Montatori certificati AMERON per l'epossidico antincendio</span><span class="en">AMERON-certified fitters for epoxy fire-fighting lines</span></li>
+          <li><span class="it">Linee anche in PP, PVC e PEAD</span><span class="en">Lines also in PP, PVC and HDPE</span></li>
+          <li><span class="it">Contenitori tecnici per la Difesa e grandi tubazioni per fogne e acquedotti</span><span class="en">Technical enclosures for Defense and large sewer and water pipes</span></li>
+        </ul>
+        <figure class="inset"><img src="assets/raccordo.jpg" alt="Derivazione a T in vetroresina con flange prodotta da KVP" loading="lazy" style="object-position:50% 45%"><figcaption class="mono"><span class="it">Dal nostro reparto</span><span class="en">From our crew</span></figcaption></figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="panel" id="custom">
+    <img class="panel-bg" src="assets/u/garage.jpg" alt="" loading="lazy">
+    <div class="panel-in">
+      <p class="mono k">02 — <span class="it">Settori</span><span class="en">Sectors</span> · 4/4</p>
+      <h3 class="word"><span class="it">Su misura</span><span class="en">Custom</span></h3>
+      <div class="panel-grid">
+        <p class="lead"><span class="it">Pezzi unici da disegni, modelli o semplici idee. Se il disegno non esiste, saliamo a bordo e lo rileviamo noi: boccaporti, scale, supporti antenna e oblò per unità navali militari.</span><span class="en">One-off parts from drawings, models or simple ideas. If there's no drawing, we go on board and survey it: hatches, ladders, antenna mounts and portholes for naval vessels.</span></p>
+        <ul>
+          <li><span class="it">Contenitori mimetici per apparati di comunicazione</span><span class="en">Camouflage enclosures for communication equipment</span></li>
+          <li><span class="it">Attrezzature e strutture speciali su progetto del cliente</span><span class="en">Equipment and special structures to the client's design</span></li>
+        </ul>
+        <figure class="inset"><img src="assets/tubi.jpg" alt="Struttura speciale in composito realizzata su disegno" loading="lazy"><figcaption class="mono"><span class="it">Dal nostro reparto</span><span class="en">From our crew</span></figcaption></figure>
+      </div>
+    </div>
+  </article>
 </section>
 
-<!-- METODO -->
+<!-- 5 · DATI -->
+<section class="ticket" aria-label="In breve">
+  <dl>
+    <div><dt>1992</dt><dd><span class="it">prima linea GRP</span><span class="en">first GRP line</span></dd></div>
+    <div><dt>1996</dt><dd><span class="it">prima unità igienica navale</span><span class="en">first marine hygiene unit</span></dd></div>
+    <div><dt>3</dt><dd><span class="it">Type Approval navali</span><span class="en">marine Type Approvals</span></dd></div>
+    <div><dt>5</dt><dd><span class="it">campionati GT e formula assistiti</span><span class="en">GT and formula series supported</span></dd></div>
+  </dl>
+</section>
+
+<!-- 6 · METODO -->
 <section class="method" id="metodo" aria-labelledby="h-met">
-  <div class="wrap">
-    <header class="sh">
-      <p class="num mono">03 / <span class="it">Metodo</span><span class="en">Method</span></p>
-      <h2 id="h-met"><span class="it">Un solo interlocutore,<br>dal rilievo al collaudo.</span><span class="en">One partner,<br>from survey to testing.</span></h2>
-    </header>
-    <div class="method-grid">
-      <figure class="method-img"><img src="assets/hero-infusione.jpg" alt="Reparto di laminazione KVP" loading="lazy"><figcaption class="mono">FIG. 06 — <span class="it">Reparto di laminazione</span><span class="en">Lamination department</span></figcaption></figure>
-      <ol class="steps">
-        <li><span class="mono">01</span><div><h3><span class="it">Analisi</span><span class="en">Analysis</span></h3><p><span class="it">Esigenze, condizioni operative e vincoli di progetto.</span><span class="en">Needs, operating conditions and design constraints.</span></p></div></li>
-        <li><span class="mono">02</span><div><h3><span class="it">Progetto e prototipo</span><span class="en">Design and prototype</span></h3><p><span class="it">Modelli CAD, prototipi e campionatura rapida.</span><span class="en">CAD models, prototypes and rapid sampling.</span></p></div></li>
-        <li><span class="mono">03</span><div><h3><span class="it">Produzione e posa</span><span class="en">Production and installation</span></h3><p><span class="it">Pezzi unici o serie, montaggio in sito, secondo ISO 9001.</span><span class="en">One-offs or series, on-site assembly, to ISO 9001.</span></p></div></li>
-        <li><span class="mono">04</span><div><h3><span class="it">Collaudo e manutenzione</span><span class="en">Testing and maintenance</span></h3><p><span class="it">Prove funzionali, ispezioni finali, interventi programmati.</span><span class="en">Functional tests, final inspections, scheduled service.</span></p></div></li>
-      </ol>
+  <figure class="method-img"><img src="assets/hero-infusione.jpg" alt="Laminazione nel reparto KVP di Busalla" loading="lazy"><figcaption class="mono"><span class="it">Reparto di laminazione, Busalla</span><span class="en">Lamination shop, Busalla</span></figcaption></figure>
+  <div class="method-txt">
+    <p class="mono k"><span class="it">03 — Metodo</span><span class="en">03 — Method</span></p>
+    <h2 id="h-met"><span class="it">Un solo interlocutore, dal rilievo al collaudo.</span><span class="en">One partner, from survey to testing.</span></h2>
+    <ol class="steps">
+      <li><b>01</b><div><h3><span class="it">Analisi</span><span class="en">Analysis</span></h3><p><span class="it">Esigenze, condizioni operative, vincoli di progetto.</span><span class="en">Needs, operating conditions, design constraints.</span></p></div></li>
+      <li><b>02</b><div><h3><span class="it">Prototipo</span><span class="en">Prototype</span></h3><p><span class="it">Modelli CAD, stampi e campionatura rapida.</span><span class="en">CAD models, molds and rapid sampling.</span></p></div></li>
+      <li><b>03</b><div><h3><span class="it">Produzione e posa</span><span class="en">Production and install</span></h3><p><span class="it">Pezzi unici o serie, montaggio in sito, secondo ISO 9001.</span><span class="en">One-offs or series, on-site assembly, to ISO 9001.</span></p></div></li>
+      <li><b>04</b><div><h3><span class="it">Collaudo</span><span class="en">Testing</span></h3><p><span class="it">Prove funzionali, ispezioni finali, manutenzione programmata.</span><span class="en">Functional tests, final inspections, scheduled service.</span></p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 7 · CERTIFICAZIONI E REFERENZE -->
+<section class="proof" id="qualita" aria-labelledby="h-q">
+  <div class="proof-in">
+    <div class="proof-head">
+      <p class="mono k"><span class="it">04 — Certificazioni</span><span class="en">04 — Certifications</span></p>
+      <h2 id="h-q"><span class="it">Si può verificare.</span><span class="en">You can check it.</span></h2>
     </div>
-    <p class="statement"><span class="it">Lavorazione manuale di precisione, processi industriali ripetibili. <mark>Progettato e fatto in Italia.</mark></span><span class="en">Precise hand work, repeatable industrial processes. <mark>Designed and made in Italy.</mark></span></p>
-  </div>
-</section>
-
-<!-- CERTIFICAZIONI -->
-<section class="certs" id="qualita" aria-labelledby="h-q">
-  <div class="wrap">
-    <header class="sh">
-      <p class="num mono">04 / <span class="it">Certificazioni</span><span class="en">Certifications</span></p>
-      <h2 id="h-q"><span class="it">Qualità che si può verificare.</span><span class="en">Quality you can verify.</span></h2>
-    </header>
-    <ul class="cert-list">
-      <li><span class="stamp mono">UNI EN ISO<br>9001:2015</span><div><h3><span class="it">Sistema di gestione della qualità</span><span class="en">Quality management system</span></h3><p><span class="it">Ogni fase, dalla progettazione alla produzione, è controllata e tracciata.</span><span class="en">Every stage, from design to production, is checked and traced.</span></p></div></li>
-      <li><span class="stamp mono">REACH</span><div><h3><span class="it">Regolamento europeo sulle sostanze chimiche</span><span class="en">EU chemicals regulation</span></h3><p><span class="it">Resine e materiali sicuri per le persone e l'ambiente.</span><span class="en">Resins and materials safe for people and the environment.</span></p></div></li>
-      <li><span class="stamp mono">TYPE<br>APPROVAL ×2</span><div><h3><span class="it">Tubazioni in vetroresina per uso navale</span><span class="en">Fiberglass piping for marine use</span></h3><p><span class="it">Resistenza meccanica, tenuta e durata per le installazioni a bordo.</span><span class="en">Mechanical strength, tightness and durability on board.</span></p></div></li>
-      <li><span class="stamp mono">TYPE<br>APPROVAL</span><div><h3><span class="it">Rivestimenti per scarichi e prese a mare</span><span class="en">Coatings for discharges and sea chests</span></h3><p><span class="it">Contro corrosione, abrasione e acqua salata nelle zone esposte dello scafo.</span><span class="en">Against corrosion, abrasion and salt water on exposed hull areas.</span></p></div></li>
-      <li><span class="stamp mono"><span class="it">ANTI-<br>SCIVOLO</span><span class="en">ANTI-<br>SLIP</span></span><div><h3><span class="it">Piatti doccia e pavimenti in vetroresina</span><span class="en">Fiberglass shower trays and floors</span></h3><p><span class="it">Aderenza certificata in ambienti bagnati e marini.</span><span class="en">Certified grip in wet and marine environments.</span></p></div></li>
-      <li><span class="stamp mono">AMERON</span><div><h3><span class="it">Montaggio tubazioni in resina epossidica</span><span class="en">Epoxy resin piping assembly</span></h3><p><span class="it">Usate per numerose linee antincendio.</span><span class="en">Used for numerous fire-fighting lines.</span></p></div></li>
+    <ul class="certs">
+      <li><b>UNI EN ISO 9001:2015</b><span class="it">Sistema di gestione della qualità, dalla progettazione alla produzione</span><span class="en">Quality management system, from design to production</span></li>
+      <li><b>REACH</b><span class="it">Resine e materiali conformi al regolamento europeo</span><span class="en">Resins and materials compliant with EU regulation</span></li>
+      <li><b>Type Approval ×2</b><span class="it">Tubazioni in vetroresina per uso navale</span><span class="en">Fiberglass piping for marine use</span></li>
+      <li><b>Type Approval</b><span class="it">Rivestimenti per scarichi e prese a mare</span><span class="en">Coatings for discharges and sea chests</span></li>
+      <li><b><span class="it">Antiscivolo</span><span class="en">Anti-slip</span></b><span class="it">Piatti doccia e pavimenti in vetroresina</span><span class="en">Fiberglass shower trays and floors</span></li>
+      <li><b>AMERON</b><span class="it">Montaggio di tubazioni in resina epossidica</span><span class="en">Epoxy resin piping assembly</span></li>
     </ul>
-    <p class="crew mono"><span class="it">Personale abilitato:</span><span class="en">Certified crew:</span> <span class="it">lavori in quota e su funi (DPI 3ª cat.) · antincendio · piattaforme elevabili · carrelli elevatori · applicatori BELZONA</span><span class="en">rope access and work at height (Cat. 3 PPE) · firefighting · MEWP · forklifts · BELZONA applicators</span></p>
+    <p class="crew"><span class="it">Personale abilitato a lavori in quota e su funi (DPI 3ª cat.), antincendio, piattaforme elevabili, carrelli elevatori; applicatori BELZONA.</span><span class="en">Crew certified for rope access and work at height (Cat. 3 PPE), firefighting, MEWPs, forklifts; BELZONA applicators.</span></p>
+    <div class="refs">
+      <p class="mono k"><span class="it">Hanno lavorato con noi</span><span class="en">They've worked with us</span></p>
+      <div class="logos"><img src="assets/c-msc.png" alt="MSC Crociere" loading="lazy"><img src="assets/c-aida.png" alt="AIDA Cruises" loading="lazy"><img src="assets/c-imperiale.png" alt="Imperiale Sport Car Service" loading="lazy"><img src="assets/c-algor.webp" alt="Algor" loading="lazy"><img src="assets/c-cesag.png" alt="Cesag" loading="lazy"></div>
+      <p class="refs-txt"><span class="it">E poi: impiantistica GRP negli ex impianti ENEL di Vado Ligure, La Spezia, Turbigo e Marghera, importanti aziende chimiche italiane, i principali costruttori di reti fognarie e acquedotti.</span><span class="en">Plus: GRP plant work at the former ENEL plants of Vado Ligure, La Spezia, Turbigo and Marghera, major Italian chemical companies, and leading sewer and water network contractors.</span></p>
+    </div>
   </div>
 </section>
 
-<!-- REFERENZE -->
-<section class="refs" id="referenze" aria-labelledby="h-r">
-  <div class="wrap">
-    <header class="sh">
-      <p class="num mono">05 / <span class="it">Referenze</span><span class="en">References</span></p>
-      <h2 id="h-r"><span class="it">Dove abbiamo lavorato.</span><span class="en">Where we have worked.</span></h2>
-    </header>
-    <div class="logos"><img src="assets/c-msc.png" alt="MSC Crociere" loading="lazy"><img src="assets/c-aida.png" alt="AIDA Cruises" loading="lazy"><img src="assets/c-imperiale.png" alt="Imperiale Sport Car Service" loading="lazy"><img src="assets/c-algor.webp" alt="Algor" loading="lazy"><img src="assets/c-cesag.png" alt="Cesag" loading="lazy"></div>
-    <dl class="ref-list">
-      <div><dt><span class="it">Navi da crociera</span><span class="en">Cruise ships</span></dt><dd><span class="it">Unità igieniche per i fornitori Fincantieri; arredi e resinature per le aree hotel; manutenzione di lance di salvataggio per le principali compagnie internazionali.</span><span class="en">Hygiene units for Fincantieri suppliers; furnishings and resin coatings for hotel areas; lifeboat maintenance for major international lines.</span></dd></div>
-      <div><dt>Motorsport</dt><dd>Lamborghini Super Trofeo, International GT Open, Formula 4, <span class="it">Campionato Italiano GT</span><span class="en">Italian GT Championship</span>, Ferrari Challenge.</dd></div>
-      <div><dt><span class="it">Centrali e impianti</span><span class="en">Power and process plants</span></dt><dd><span class="it">Impiantistica in GRP negli ex impianti ENEL di Vado Ligure, La Spezia, Turbigo e Marghera, e in importanti aziende chimiche italiane.</span><span class="en">GRP plant work at the former ENEL plants of Vado Ligure, La Spezia, Turbigo and Marghera, and at major Italian chemical companies.</span></dd></div>
-      <div><dt><span class="it">Reti civili</span><span class="en">Civil networks</span></dt><dd><span class="it">Tubazioni di grande diametro per fognature e acquedotti, con i principali costruttori italiani.</span><span class="en">Large-diameter sewer and water piping with leading Italian contractors.</span></dd></div>
-    </dl>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq" id="faq" aria-labelledby="h-f">
-  <div class="wrap faq-grid">
-    <header class="sh">
-      <p class="num mono">06 / FAQ</p>
-      <h2 id="h-f"><span class="it">Prima di scriverci.</span><span class="en">Before you write.</span></h2>
-    </header>
+<!-- 8 · DOMANDE -->
+<section class="faq" aria-labelledby="h-f">
+  <div class="faq-in">
+    <h2 id="h-f"><span class="it">Domande che ci fanno spesso.</span><span class="en">Questions we often get.</span></h2>
     <div class="qa">
       <details><summary><span class="it">Quali sono i tempi di produzione?</span><span class="en">What are the lead times?</span></summary><p><span class="it">Dipendono da complessità, materiali, volumi e processi. Ogni progetto è valutato singolarmente e la stima arriva con il preventivo.</span><span class="en">They depend on complexity, materials, volumes and processes. Each project is assessed individually and the estimate comes with the quote.</span></p></details>
-      <details><summary><span class="it">C'è un quantitativo minimo?</span><span class="en">Is there a minimum order?</span></summary><p><span class="it">Lavoriamo su pezzi singoli, prototipi, piccole serie e produzioni più ampie: dipende dal componente e dagli stampi necessari.</span><span class="en">We work on single parts, prototypes, small batches and larger runs: it depends on the part and the tooling required.</span></p></details>
-      <details><summary><span class="it">Cosa serve per un preventivo?</span><span class="en">What do you need for a quote?</span></summary><p><span class="it">Disegni tecnici, dimensioni, specifiche dei materiali, quantità e applicazione. Usa il modulo qui sotto o scrivi a info@kvpvetroresina.it.</span><span class="en">Technical drawings, dimensions, material specs, quantities and application. Use the form below or write to info@kvpvetroresina.it.</span></p></details>
-      <details><summary><span class="it">Realizzate prototipi e stampi?</span><span class="en">Do you make prototypes and molds?</span></summary><p><span class="it">Sì, per verificare geometria, materiali e fattibilità prima della produzione.</span><span class="en">Yes, to check geometry, materials and feasibility before production.</span></p></details>
+      <details><summary><span class="it">Fate anche un pezzo solo?</span><span class="en">Do you make single parts?</span></summary><p><span class="it">Sì: pezzi singoli, prototipi, piccole serie e produzioni più ampie. Dipende dal componente e dagli stampi necessari.</span><span class="en">Yes: single parts, prototypes, small batches and larger runs. It depends on the part and the tooling required.</span></p></details>
+      <details><summary><span class="it">Cosa vi serve per un preventivo?</span><span class="en">What do you need for a quote?</span></summary><p><span class="it">Disegni tecnici, dimensioni, specifiche dei materiali, quantità e applicazione. Se il disegno non c'è, veniamo a rilevare.</span><span class="en">Technical drawings, dimensions, material specs, quantities and application. If there's no drawing, we come and survey.</span></p></details>
       <details><summary><span class="it">Lavorate all'estero?</span><span class="en">Do you work abroad?</span></summary><p><span class="it">Sì. A seconda del progetto le nostre squadre intervengono direttamente in sito, anche nei cantieri esteri.</span><span class="en">Yes. Depending on the project, our crews work directly on site, including shipyards abroad.</span></p></details>
     </div>
   </div>
 </section>
 
-<!-- CONTATTI -->
+<!-- 9 · CONTATTI -->
 <section class="contact" id="contatti" aria-labelledby="h-c">
-  <div class="wrap">
-    <header class="sh">
-      <p class="num mono">07 / <span class="it">Contatti</span><span class="en">Contact</span></p>
-      <h2 id="h-c"><span class="it">Mandaci il disegno.<br>Ti diciamo come farlo.</span><span class="en">Send us the drawing.<br>We'll tell you how to build it.</span></h2>
-    </header>
+  <img class="contact-bg" src="assets/u/sea.jpg" alt="" loading="lazy">
+  <div class="contact-in">
+    <p class="mono k"><span class="it">05 — Contatti</span><span class="en">05 — Contact</span></p>
+    <h2 id="h-c"><span class="it">Mandaci il disegno.</span><span class="en">Send us the drawing.</span></h2>
     <div class="contact-grid">
       <form id="f" novalidate>
         <div class="fld"><label for="n"><span class="it">Nome e cognome</span><span class="en">Full name</span></label><input id="n" name="n" autocomplete="name" required></div>
         <div class="fld"><label for="a"><span class="it">Azienda</span><span class="en">Company</span></label><input id="a" name="a" autocomplete="organization"></div>
         <div class="fld"><label for="e">Email</label><input id="e" name="e" type="email" autocomplete="email" required></div>
         <div class="fld"><label for="s"><span class="it">Settore</span><span class="en">Sector</span></label><select id="s" name="s"><option value="Nautica / Marine">Nautica / Marine</option><option value="Automotive e motorsport">Automotive / Motorsport</option><option value="Industria / Industrial">Industria / Industrial</option><option value="Su misura / Custom">Su misura / Custom</option></select></div>
-        <div class="fld full"><label for="m"><span class="it">La richiesta: materiali, quantità, scadenze</span><span class="en">Your request: materials, quantities, deadlines</span></label><textarea id="m" name="m" rows="5" required></textarea></div>
-        <div class="full send"><button class="btn" type="submit"><span class="it">Prepara la mail</span><span class="en">Prepare the email</span><span aria-hidden="true">→</span></button>
-        <p class="note" id="fn" role="status"><span class="it">Si apre il tuo programma di posta con il testo già pronto per info@kvpvetroresina.it. I disegni li alleghi lì.</span><span class="en">Your email app opens with the message ready for info@kvpvetroresina.it. Attach drawings there.</span></p></div>
+        <div class="fld full"><label for="m"><span class="it">Cosa ti serve: materiali, quantità, scadenze</span><span class="en">What you need: materials, quantities, deadlines</span></label><textarea id="m" name="m" rows="4" required></textarea></div>
+        <div class="full send"><button class="btn" type="submit"><span class="it">Prepara la richiesta</span><span class="en">Prepare the request</span><span aria-hidden="true">→</span></button>
+        <p class="note" id="fn" role="status"><span class="it">Si apre la tua posta con il messaggio pronto per info@kvpvetroresina.it. I disegni li alleghi lì.</span><span class="en">Your email app opens with the message ready for info@kvpvetroresina.it. Attach drawings there.</span></p></div>
       </form>
       <address>
-        <div><p class="mono"><span class="it">Sede e stabilimento</span><span class="en">Head office and plant</span></p><p class="big">Via Costalovaia 6B<br>16012 Busalla (GE)</p><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Costalovaia+6B+16012+Busalla" target="_blank" rel="noopener"><span class="it">Apri in Google Maps</span><span class="en">Open in Google Maps</span> ↗</a></div>
-        <div><p class="mono"><span class="it">Telefono</span><span class="en">Phone</span></p><a class="big" href="tel:+390109648700">+39 010 9648700</a></div>
-        <div><p class="mono">Email</p><a href="mailto:info@kvpvetroresina.it">info@kvpvetroresina.it</a><br><a href="mailto:kvp@kvpvetroresina.it">kvp@kvpvetroresina.it</a></div>
+        <a class="big" href="tel:+390109648700">+39 010 9648700</a>
+        <a class="big" href="mailto:info@kvpvetroresina.it">info@kvpvetroresina.it</a>
+        <p>Via Costalovaia 6B<br>16012 Busalla (GE)</p>
+        <a class="mono" href="https://www.google.com/maps/search/?api=1&amp;query=Via+Costalovaia+6B+16012+Busalla" target="_blank" rel="noopener"><span class="it">Apri in Google Maps ↗</span><span class="en">Open in Google Maps ↗</span></a>
       </address>
     </div>
   </div>
 </section>
 </main>
 
-<!-- FOOTER — pattern "Footer with Suite" (21st.dev): colonne mono, marchio gigante a tutta larghezza, barra finale -->
 <footer>
-  <div class="wrap foot-cols mono">
-    <nav aria-label="Footer">
-      <a href="#settori"><span class="it">Settori</span><span class="en">Sectors</span></a>
-      <a href="#materiali"><span class="it">Materiali</span><span class="en">Materials</span></a>
-      <a href="#metodo"><span class="it">Metodo</span><span class="en">Method</span></a>
-      <a href="#qualita"><span class="it">Certificazioni</span><span class="en">Certifications</span></a>
-      <a href="#referenze"><span class="it">Referenze</span><span class="en">References</span></a>
-      <a href="#contatti"><span class="it">Contatti</span><span class="en">Contact</span></a>
-    </nav>
-    <div>
-      <p><span class="it">Componenti in materiali compositi per nautica, motorsport e industria.</span><span class="en">Composite components for marine, motorsport and industry.</span></p>
-      <p class="dim"><span class="it">Hai un pezzo da rifare, un problema di corrosione, un prototipo?</span><span class="en">A part to rebuild, a corrosion problem, a prototype?</span></p>
-      <a href="mailto:info@kvpvetroresina.it">info@kvpvetroresina.it</a>
-      <a href="tel:+390109648700">+39 010 9648700</a>
-    </div>
+  <div class="foot-mark" aria-hidden="true"><svg viewBox="0 0 250 120"><use href="#kmark"/></svg></div>
+  <div class="foot-row mono">
+    <span>© 2026 KVP Vetroresina S.r.l. · Via Costalovaia 6B, 16012 Busalla (GE)</span>
+    <span><a href="mailto:kvp@kvpvetroresina.it">kvp@kvpvetroresina.it</a></span>
+    <span><span class="it">Foto di repertorio:</span><span class="en">Stock photos:</span> <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a></span>
   </div>
-  <div class="wordmark" aria-hidden="true"><svg viewBox="0 0 250 120"><use href="#kmark"/></svg></div>
-  <div class="wrap foot-bar mono"><span>© 2026 KVP Vetroresina S.r.l. · Via Costalovaia 6B, 16012 Busalla (GE)</span><span class="it">Fatto in Liguria</span><span class="en">Made in Liguria</span></div>
 </footer>
-<script src="script.js?v=10"></script>
+<script src="script.js?v=23"></script>
 </body>
 </html>
