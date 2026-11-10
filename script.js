@@ -25,6 +25,16 @@
   function onScroll() { bar.classList.toggle('on', window.scrollY > 8); }
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 
+  /* reveal allo scroll (senza JS o con movimento ridotto tutto resta visibile) */
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if ('IntersectionObserver' in window && !reduce) {
+    document.documentElement.classList.add('js');
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    $$('[data-r]').forEach(function (el, i) { el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
+  }
+
   /* menu mobile */
   var nav = $('#nav'), burger = $('#burger');
   burger.addEventListener('click', function () {
