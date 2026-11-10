@@ -439,3 +439,26 @@ html{scroll-padding-top:88px}
   .stage{position:relative;top:auto}
   .plies li{min-height:0}
 }
+
+/* Keep the complete exploded laminate and its upright logo inside the mobile stage. */
+@media (max-width:860px){
+  .stage{height:clamp(280px,40svh,380px);overflow:visible;isolation:isolate;
+    background:linear-gradient(var(--ink) 90%,rgba(10,13,17,0))}
+  .stack{width:min(48vw,210px);transform:translateY(calc(var(--sy,0px) + 32px)) rotateX(60deg) rotateZ(-38deg)}
+  .plies{padding-top:24px}
+  .plies li{min-height:clamp(190px,32svh,290px);transition:background .25s,border-color .25s;
+    scroll-margin-top:calc(var(--mobile-top) + 40svh)}
+  .plies li.on{border-top-color:var(--y)}
+  .ply.dim{filter:brightness(.65) saturate(.85)}
+  .panel-bg{transform:scale(1.06)}
+  .layup-head h2{font-size:clamp(2.4rem,10.5vw,4.2rem)}
+}
+@media (max-width:860px) and (max-height:540px){
+  .stage{position:relative;top:auto;height:300px}
+  .plies li{min-height:0;padding-block:24px}
+}
+@media (max-width:860px) and (prefers-reduced-motion:reduce){
+  .stage{position:relative;top:auto}
+  .plies li{min-height:0}
+  .panel-bg{transform:none!important}
+}

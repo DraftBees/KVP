@@ -8,6 +8,7 @@
   var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
   var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) { reduce = e.matches; req(); });
   var wide = window.matchMedia('(min-width: 861px)');
 
   /* lingua */
@@ -188,22 +189,24 @@
       return;
     }
     /* mobile: la scena è sticky in alto; l'elenco scorre sotto e decide lo strato attivo */
-    var ref = stage.getBoundingClientRect().bottom - 12;
-    var t0 = items[0].getBoundingClientRect().top;
-    var last = items[items.length - 1].getBoundingClientRect();
-    var gapM = Math.min(34, H * 0.042);
-    var o = ease(clamp((ref + H * 0.30 - t0) / (H * 0.30), 0, 1));
-    var c = ease(clamp((ref - last.bottom + 40) / 120, 0, 1));
-    var act = -1;
-    items.forEach(function (li, i) { var b = li.getBoundingClientRect(); if (b.top < ref + 30 && b.bottom > ref + 30) act = i; });
-    if (c > 0.5) act = -1;
-    setPlies(gapM * o * (1 - c), act);
-    items.forEach(function (li, i) { li.classList.toggle('on', act === i); });
-    lend.classList.toggle('on', c > 0.5);
+    var stageBox = stage.getBoundingClientRect();
+    var cards = items.map(function (li) { return li.getBoundingClientRect(); });
+    var ref = Math.min(stageBox.bottom + 48, H * 0.72);
+    var nearest = 0, distance = Infinity;
+    cards.forEach(function (b, i) {
+      var d = Math.abs(b.top - ref);
+      if (d < distance) { distance = d; nearest = i; }
+    });
+    var gapM = Math.min(26, stageBox.height * 0.07);
+    var opening = ease(clamp((H - bounds.top) / (H * 0.65), 0, 1));
+    var closing = ease(clamp((ref - cards[cards.length - 1].bottom) / 180, 0, 1));
+    setPlies(gapM * opening * (1 - closing), closing > 0.8 ? -1 : nearest);
+    items.forEach(function (li, i) { li.classList.toggle('on', nearest === i); });
+    lend.classList.toggle('on', closing > 0.5);
   }
 
   function panelsFrame(H) {
-    if (reduce || !wide.matches) { panels.forEach(function (pn) { pn.style.transform = ''; pn.style.filter = ''; $('.panel-bg', pn).style.transform = ''; }); return; }
+    if (reduce) { panels.forEach(function (pn) { pn.style.transform = ''; pn.style.filter = ''; $('.panel-bg', pn).style.transform = ''; }); return; }
     if (wide.matches) {
       for (var i = 0; i < panels.length - 1; i++) {
         var t = clamp(1 - panels[i + 1].getBoundingClientRect().top / H, 0, 1);
@@ -216,9 +219,10 @@
     /* mobile: parallasse leggero della foto */
     panels.forEach(function (pn) {
       var b = pn.getBoundingClientRect();
-      if (b.bottom < -H || b.top > H * 2) return;
+      if (b.bottom < 0 || b.top > H) return;
+      pn.style.transform = ''; pn.style.filter = '';
       var mid = (b.top + b.height / 2 - H / 2) / H;
-      $('.panel-bg', pn).style.transform = 'translate3d(0,' + (mid * -42).toFixed(1) + 'px,0) scale(1.18)';
+      $('.panel-bg', pn).style.transform = 'translate3d(0,' + clamp(mid * -16, -16, 16).toFixed(1) + 'px,0) scale(1.06)';
     });
   }
 
@@ -233,7 +237,9 @@
     mprog.style.transform = 'scaleX(' + prog + ')';
     /* barra azioni: dopo l'apertura, nascosta quando il modulo è a schermo */
     var cb = contact.getBoundingClientRect();
-    var showDock = !wide.matches && y > H * 0.7 && cb.top > H && !nav.classList.contains('open');
+    var sceneBox = layup.getBoundingClientRect();
+    var sceneVisible = sceneBox.top < H * 0.65 && sceneBox.bottom > H * 0.35;
+    var showDock = !sceneVisible && !wide.matches && y > H * 0.7 && cb.top > H && !nav.classList.contains('open');
     dock.classList.toggle('show', showDock);
     dock.inert = !showDock;
     layupFrame(H);
