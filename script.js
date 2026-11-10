@@ -41,6 +41,57 @@
   var panels = $$('.panel'), contact = $('#contatti');
   var MAX_MM = 14.2;
 
+  /* trame dei materiali: generate al volo, nitide a qualsiasi dimensione (niente foto sgranate) */
+  function weaveTexture(o) {
+    var S = o.size || 1024, c = document.createElement('canvas'); c.width = c.height = S;
+    var x = c.getContext('2d'), cell = S / o.n, gap = (o.gap || 0.07) * cell;
+    x.fillStyle = o.bg; x.fillRect(0, 0, S, S);
+    function tow(px, py, w, h, vert, pal) {
+      var g = vert ? x.createLinearGradient(px, 0, px + w, 0) : x.createLinearGradient(0, py, 0, py + h);
+      g.addColorStop(0, pal[0]); g.addColorStop(0.2, pal[1]); g.addColorStop(0.5, pal[2]); g.addColorStop(0.8, pal[1]); g.addColorStop(1, pal[0]);
+      x.fillStyle = g; x.fillRect(px, py, w, h);
+      var wid = vert ? w : h, cnt = Math.round(wid / 1.6);
+      for (var k = 0; k < cnt; k++) {
+        var off = (k + Math.random() * 0.8) * wid / cnt, a = 0.05 + Math.random() * 0.13;
+        x.fillStyle = Math.random() < 0.5 ? 'rgba(255,255,255,' + a + ')' : 'rgba(0,0,0,' + a + ')';
+        if (vert) x.fillRect(px + off, py, 1.1, h); else x.fillRect(px, py + off, w, 1.1);
+      }
+      var g2 = vert ? x.createLinearGradient(0, py, 0, py + h) : x.createLinearGradient(px, 0, px + w, 0);
+      g2.addColorStop(0, 'rgba(0,0,0,.66)'); g2.addColorStop(0.15, 'rgba(0,0,0,.06)'); g2.addColorStop(0.5, 'rgba(255,255,255,.05)');
+      g2.addColorStop(0.85, 'rgba(0,0,0,.06)'); g2.addColorStop(1, 'rgba(0,0,0,.66)');
+      x.fillStyle = g2; x.fillRect(px, py, w, h);
+    }
+    var i, j, s;
+    for (j = 0; j < o.n; j++) for (i = 0; i < o.n;) {            /* ordito (verticale) */
+      if (o.rule(i, j)) { s = i; while (i < o.n && o.rule(i, j)) i++; tow(j * cell + gap / 2, s * cell + gap / 2, cell - gap, (i - s) * cell - gap, true, o.warp); } else i++;
+    }
+    for (i = 0; i < o.n; i++) for (j = 0; j < o.n;) {            /* trama (orizzontale) */
+      if (!o.rule(i, j)) { s = j; while (j < o.n && !o.rule(i, j)) j++; tow(s * cell + gap / 2, i * cell + gap / 2, (j - s) * cell - gap, cell - gap, false, o.weft); } else j++;
+    }
+    x.globalCompositeOperation = 'soft-light';                    /* luce morbida + lucentezza */
+    var rg = x.createRadialGradient(S * 0.3, S * 0.22, S * 0.05, S * 0.5, S * 0.5, S * 0.85);
+    rg.addColorStop(0, 'rgba(255,255,255,.75)'); rg.addColorStop(0.55, 'rgba(128,128,128,.0)'); rg.addColorStop(1, 'rgba(0,0,0,.7)');
+    x.fillStyle = rg; x.fillRect(0, 0, S, S);
+    x.globalCompositeOperation = 'source-over';
+    for (var q = 0; q < S * 3; q++) { x.fillStyle = 'rgba(' + (Math.random() < 0.5 ? '255,255,255' : '0,0,0') + ',' + (Math.random() * 0.06).toFixed(3) + ')'; x.fillRect(Math.random() * S, Math.random() * S, 1.2, 1.2); }
+    return c.toDataURL('image/jpeg', 0.9);
+  }
+  var twill = function (i, j) { return ((i + j) % 4) < 2; }, plain = function (i, j) { return (i + j) % 2 === 0; };
+  var CARB = { warp: ['#050607', '#1a1d22', '#7b8594'], weft: ['#040405', '#0f1115', '#3a414b'] };
+  var KEV = { warp: ['#8a6200', '#dca511', '#ffe486'], weft: ['#7a5500', '#bf8c08', '#eec444'] };
+  var GLS = { warp: ['#8f9a93', '#cfd7d1', '#f8faf6'], weft: ['#86918b', '#c0c9c3', '#edf0eb'] };
+  window.__tex = {
+    p1: function () { return weaveTexture({ n: 13, rule: plain, warp: GLS.warp, weft: GLS.weft, bg: '#5d6762', gap: 0.06 }); },
+    p2: function () { return weaveTexture({ n: 17, rule: plain, warp: KEV.warp, weft: KEV.weft, bg: '#2a1c00', gap: 0.07 }); },
+    p3: function () { return weaveTexture({ n: 22, rule: twill, warp: CARB.warp, weft: CARB.weft, bg: '#000', gap: 0.06 }); },
+    p4: function () { return weaveTexture({ n: 20, rule: twill, warp: CARB.warp, weft: KEV.weft, bg: '#120c00', gap: 0.06 }); }
+  };
+  $$('.ply').forEach(function (p) {
+    var m = /p([1-4])/.exec(p.className);
+    var EDGE = { 1: '#8d9690', 2: '#8a6200', 3: '#0b0c0e', 4: '#2b2108' };
+    if (m) { p.style.setProperty('--edge', EDGE[m[1]]); try { p.style.setProperty('--t', 'url(' + window.__tex['p' + m[1]]() + ')'); } catch (e) {} }
+  });
+
   /* logo KVP estruso: tante copie dello stesso tracciato del marchio, impilate in profondita */
   var logo3d = $('#logo3d'), SL = 20, DEPTH = 26;
   if (logo3d) {
@@ -59,12 +110,12 @@
   function setPlies(gap, active) {
     var n = plies.length;
     plies.forEach(function (ply, i) {
-      var lift = i === active ? gap * 0.6 : 0;
+      var lift = i === active ? gap * 0.35 : 0;
       ply.style.setProperty('--z', ((n - 1 - i) * (gap + 3) + lift) + 'px');
       ply.classList.toggle('dim', active > -1 && i !== active);
     });
     stack.style.setProperty('--sy', (gap * (wide.matches ? 2.3 : 1.2) + 8) + 'px');
-    var sw = stack.offsetWidth, topZ = (n - 1) * (gap + 3) + (active === 0 ? gap * 0.6 : 0);
+    var sw = stack.offsetWidth, topZ = (n - 1) * (gap + 3) + (active === 0 ? gap * 0.35 : 0);
     stack.style.setProperty('--sw', sw + 'px');
     stack.style.setProperty('--lz', (topZ + 1 + gap * 0.75) + 'px');
     stack.style.setProperty('--lsz', (topZ + 1) + 'px');

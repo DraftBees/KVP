@@ -105,7 +105,7 @@ h1 .y{color:var(--y)}
 .stack::after{content:"";position:absolute;inset:6%;background:rgba(0,0,0,.55);filter:blur(28px);transform:translateZ(-40px)}
 .ply{position:absolute;inset:0;transform-style:preserve-3d;transform:translateZ(var(--z,0px));transition:filter .4s,opacity .4s;background:var(--t) center/cover #222;outline:1px solid rgba(236,232,224,.28);outline-offset:-1px}
 .ply i{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.18),transparent 40%,transparent 60%,rgba(0,0,0,.35))}
-.ply::before,.ply::after{content:"";position:absolute;background:inherit;filter:brightness(.42)}
+.ply::before,.ply::after{content:"";position:absolute;background:var(--edge,#26282c)}
 .ply::before{left:0;right:0;bottom:0;height:7px;transform-origin:bottom;transform:rotateX(-90deg)}
 .ply::after{top:0;bottom:0;right:0;width:7px;transform-origin:right;transform:rotateY(90deg)}
 .p0{background:linear-gradient(135deg,#F7F4EE 0%,#E2DDD2 45%,#F4F0E8 60%,#CFC9BD 100%)}
