@@ -189,6 +189,21 @@
       return;
     }
     /* mobile: la scena è sticky in alto; l'elenco scorre sotto e decide lo strato attivo */
+    if (window.matchMedia('(min-height: 541px)').matches) {
+      var travel = bounds.height - $('.layup-pin').offsetHeight;
+      var progress = clamp((60 - bounds.top) / Math.max(1, travel), 0, 1);
+      var opening = ease(clamp(progress / 0.13, 0, 1));
+      var closing = ease(clamp((progress - 0.90) / 0.10, 0, 1));
+      var active = clamp(Math.floor((progress - 0.13) / 0.77 * items.length), 0, items.length - 1);
+      var gap = Math.min(32, stage.offsetHeight * 0.065) * opening * (1 - closing);
+      setPlies(gap, progress < 0.10 || closing > 0.6 ? -1 : active);
+      stack.style.setProperty('--sy', (gap * 1.8 + 30) + 'px');
+      stack.style.setProperty('--rx', (58 + progress * 4) + 'deg');
+      stack.style.setProperty('--rz', (-32 + progress * 12) + 'deg');
+      items.forEach(function (li, i) { li.classList.toggle('on', i === active && closing < 0.65); });
+      lend.classList.toggle('on', closing > 0.65);
+      return;
+    }
     var stageBox = stage.getBoundingClientRect();
     var cards = items.map(function (li) { return li.getBoundingClientRect(); });
     var ref = H <= 540 ? H * 0.4 : Math.min(stageBox.bottom + 48, H * 0.72);
@@ -225,6 +240,11 @@
       $('.panel-bg', pn).style.transform = 'translate3d(0,' + clamp(mid * -16, -16, 16).toFixed(1) + 'px,0) scale(1.06)';
     });
   }
+
+  var panelObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) { entry.target.classList.toggle('in-view', entry.isIntersecting); });
+  }, { threshold: 0.12 });
+  panels.forEach(function (pn) { panelObserver.observe(pn); });
 
   var ticking = false;
   function frame() {
