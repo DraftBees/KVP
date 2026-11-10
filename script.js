@@ -21,19 +21,43 @@
   setLang((q && q[1]) || store.get('kvp-lang') || ((navigator.language || 'it').slice(0, 2) === 'en' ? 'en' : 'it'));
   $$('.lang button').forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.l); }); });
 
-  /* menu */
+  /* Menu mobile: focus contenuto, sfondo inattivo e stato coerente al resize. */
   var nav = $('#nav'), burger = $('#burger');
-  function setNav(open) {
+  var compactNav = window.matchMedia('(max-width: 1080px)');
+  var background = $$('main, footer, .dock, .skip');
+  function setNav(open, returnFocus) {
+    open = open && compactNav.matches;
+    var wasOpen = nav.classList.contains('open');
     nav.classList.toggle('open', open);
     document.body.classList.toggle('menu-open', open);
     burger.setAttribute('aria-expanded', String(open));
-    nav.inert = !open && window.matchMedia('(max-width: 1080px)').matches;
+    nav.inert = compactNav.matches && !open;
+    background.forEach(function (el) { el.inert = open; });
+    if (open) { $('#dock').classList.remove('show'); $('#dock').inert = true; }
+    if (open && !wasOpen) $('a', nav).focus({ preventScroll: true });
+    if (!open && wasOpen && returnFocus) burger.focus({ preventScroll: true });
+    req();
   }
-  setNav(false);
-  burger.addEventListener('click', function () { setNav(!nav.classList.contains('open')); });
-  $$('#nav a').forEach(function (a) { a.addEventListener('click', function () { setNav(false); }); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setNav(false); });
-  window.matchMedia('(min-width: 1081px)').addEventListener('change', function () { setNav(false); nav.inert = false; });
+  burger.addEventListener('click', function () { setNav(!nav.classList.contains('open'), true); });
+  $$('#nav a').forEach(function (a) { a.addEventListener('click', function () {
+    setNav(false, false);
+    if (a.hash) {
+      var target = $(a.hash);
+      if (target) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); }
+    }
+  }); });
+  document.addEventListener('keydown', function (e) {
+    if (!nav.classList.contains('open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); setNav(false, true); }
+    if (e.key === 'Tab') {
+      var controls = $$('.bar a, .bar button').filter(function (el) { return !el.closest('[inert]') && el.getClientRects().length; });
+      var first = controls[0], last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  compactNav.addEventListener('change', function () { setNav(false, false); });
+  nav.inert = compactNav.matches;
 
   /* elementi animati */
   var bar = $('#bar'), gfill = $('#gfill'), gval = $('#gval'), mprog = $('#mprog'), dock = $('#dock');
@@ -43,7 +67,7 @@
 
   /* trame dei materiali: generate al volo, nitide a qualsiasi dimensione (niente foto sgranate) */
   function weaveTexture(o) {
-    var S = o.size || 1024, c = document.createElement('canvas'); c.width = c.height = S;
+    var S = o.size || (wide.matches ? 1024 : 512), c = document.createElement('canvas'); c.width = c.height = S;
     var x = c.getContext('2d'), cell = S / o.n, gap = (o.gap || 0.07) * cell;
     x.fillStyle = o.bg; x.fillRect(0, 0, S, S);
     function tow(px, py, w, h, vert, pal) {
@@ -81,9 +105,9 @@
   var KEV = { warp: ['#7a5400', '#d49f0e', '#ffe58a'], weft: ['#6a4900', '#b58306', '#e9bd3c'] };
   var GLS = { warp: ['#a7aea5', '#d9ddd3', '#fbfcf8'], weft: ['#9aa299', '#cdd2c8', '#f0f2ea'] };
   function foamTexture() {                                      /* schiuma PVC a cellule chiuse */
-    var S = 1024, c = document.createElement('canvas'); c.width = c.height = S; var x = c.getContext('2d');
+    var S = wide.matches ? 1024 : 512, c = document.createElement('canvas'); c.width = c.height = S; var x = c.getContext('2d');
     x.fillStyle = '#c9bf9f'; x.fillRect(0, 0, S, S);
-    for (var q = 0; q < 5200; q++) {
+    for (var q = 0; q < (wide.matches ? 5200 : 1300); q++) {
       var px = Math.random() * S, py = Math.random() * S, r = 4 + Math.random() * 9;
       var g = x.createRadialGradient(px - r * 0.3, py - r * 0.3, r * 0.1, px, py, r);
       var t = 0.82 + Math.random() * 0.3;
@@ -112,7 +136,7 @@
   });
 
   /* logo KVP estruso: tante copie dello stesso tracciato del marchio, impilate in profondita */
-  var logo3d = $('#logo3d'), SL = 20, DEPTH = 26;
+  var logo3d = $('#logo3d'), SL = wide.matches ? 20 : 10, DEPTH = 26;
   if (logo3d) {
     for (var s = 0; s < SL; s++) {
       var t = s / (SL - 1), front = s === SL - 1;
@@ -135,7 +159,7 @@
       ply.classList.toggle('act', i === active);
     });
     stack.style.setProperty('--sy', (gap * (wide.matches ? 2.3 : 1.2) + 8) + 'px');
-    var sw = stack.offsetWidth, topZ = (n - 1) * (gap + 3) + (active === 0 ? gap * 0.35 : 0);
+    var sw = stackWidth, topZ = (n - 1) * (gap + 3) + (active === 0 ? gap * 0.35 : 0);
     stack.style.setProperty('--sw', sw + 'px');
     stack.style.setProperty('--lz', (topZ + 1 + gap * 0.75) + 'px');
     stack.style.setProperty('--lsz', (topZ + 1) + 'px');
@@ -147,7 +171,10 @@
     }
   }
 
+  var stackWidth = stack.offsetWidth;
   function layupFrame(H) {
+    var bounds = layup.getBoundingClientRect();
+    if (bounds.bottom < 0 || bounds.top > H) return;
     if (reduce) { setPlies(wide.matches ? 70 : 34, -1); items.forEach(function (li) { li.classList.add('on'); }); lend.classList.add('on'); return; }
     if (wide.matches) {
       var r = layup.getBoundingClientRect();
@@ -176,7 +203,7 @@
   }
 
   function panelsFrame(H) {
-    if (reduce) { panels.forEach(function (pn) { pn.style.transform = ''; pn.style.filter = ''; $('.panel-bg', pn).style.transform = ''; }); return; }
+    if (reduce || !wide.matches) { panels.forEach(function (pn) { pn.style.transform = ''; pn.style.filter = ''; $('.panel-bg', pn).style.transform = ''; }); return; }
     if (wide.matches) {
       for (var i = 0; i < panels.length - 1; i++) {
         var t = clamp(1 - panels[i + 1].getBoundingClientRect().top / H, 0, 1);
@@ -199,20 +226,22 @@
   function frame() {
     ticking = false;
     var H = window.innerHeight, y = window.scrollY, total = document.documentElement.scrollHeight - H;
-    var prog = clamp(y / total, 0, 1);
+    var prog = total > 0 ? clamp(y / total, 0, 1) : 0;
     bar.classList.toggle('solid', y > (wide.matches ? H * 0.6 : 40));
     gfill.style.transform = 'scaleY(' + prog + ')';
     gval.textContent = (prog * MAX_MM).toFixed(2);
     mprog.style.transform = 'scaleX(' + prog + ')';
     /* barra azioni: dopo l'apertura, nascosta quando il modulo è a schermo */
     var cb = contact.getBoundingClientRect();
-    dock.classList.toggle('show', y > H * 0.7 && cb.top > H * 0.35 && !nav.classList.contains('open'));
+    var showDock = !wide.matches && y > H * 0.7 && cb.top > H && !nav.classList.contains('open');
+    dock.classList.toggle('show', showDock);
+    dock.inert = !showDock;
     layupFrame(H);
     panelsFrame(H);
   }
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   window.addEventListener('scroll', req, { passive: true });
-  window.addEventListener('resize', req);
+  window.addEventListener('resize', function () { stackWidth = stack.offsetWidth; req(); });
   window.addEventListener('load', req);
   frame();
 
