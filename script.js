@@ -41,6 +41,21 @@
   var panels = $$('.panel'), contact = $('#contatti');
   var MAX_MM = 14.2;
 
+  /* logo KVP estruso: tante copie dello stesso tracciato del marchio, impilate in profondita */
+  var logo3d = $('#logo3d'), SL = 20, DEPTH = 26;
+  if (logo3d) {
+    for (var s = 0; s < SL; s++) {
+      var t = s / (SL - 1), front = s === SL - 1;
+      var k = front ? 1 : 0.34 + 0.4 * t;
+      var col = 'rgb(' + Math.round(255 * k) + ',' + Math.round(199 * k) + ',' + Math.round(30 * k) + ')';
+      var ns = 'http://www.w3.org/2000/svg', sv = document.createElementNS(ns, 'svg');
+      sv.setAttribute('viewBox', '0 0 250 120'); sv.setAttribute('aria-hidden', 'true');
+      var u = document.createElementNS(ns, 'use'); u.setAttribute('href', '#kmark'); sv.appendChild(u);
+      sv.style.color = col; sv.style.transform = 'translateZ(' + ((s - SL / 2) * DEPTH / SL).toFixed(2) + 'px)';
+      logo3d.appendChild(sv);
+    }
+  }
+  var matTitle = $('.mat-title'), matSpans = $$('.mat-title .mt');
   function setPlies(gap, active) {
     var n = plies.length;
     plies.forEach(function (ply, i) {
@@ -48,7 +63,17 @@
       ply.style.setProperty('--z', ((n - 1 - i) * (gap + 3) + lift) + 'px');
       ply.classList.toggle('dim', active > -1 && i !== active);
     });
-    stack.style.setProperty('--sy', (gap * 1.6) + 'px');
+    stack.style.setProperty('--sy', (gap * (wide.matches ? 2.3 : 1.2) + 8) + 'px');
+    var sw = stack.offsetWidth, topZ = (n - 1) * (gap + 3) + (active === 0 ? gap * 0.6 : 0);
+    stack.style.setProperty('--sw', sw + 'px');
+    stack.style.setProperty('--lz', (topZ + 1 + gap * 0.75) + 'px');
+    stack.style.setProperty('--lsz', (topZ + 1) + 'px');
+    stack.style.setProperty('--lso', (0.85 - Math.min(gap / 120, 0.5)).toFixed(2));
+    /* il titolo accende il materiale dello strato attivo */
+    if (matTitle) {
+      matTitle.classList.toggle('has-active', active >= 1);
+      matSpans.forEach(function (m) { m.classList.toggle('on', active >= 1 && +m.dataset.m === active); });
+    }
   }
 
   function layupFrame(H) {
@@ -68,7 +93,7 @@
     var ref = stage.getBoundingClientRect().bottom - 12;
     var t0 = items[0].getBoundingClientRect().top;
     var last = items[items.length - 1].getBoundingClientRect();
-    var gapM = Math.min(46, H * 0.058);
+    var gapM = Math.min(34, H * 0.042);
     var o = ease(clamp((ref + H * 0.30 - t0) / (H * 0.30), 0, 1));
     var c = ease(clamp((ref - last.bottom + 40) / 120, 0, 1));
     var act = -1;

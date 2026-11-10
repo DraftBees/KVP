@@ -92,6 +92,13 @@ h1 .y{color:var(--y)}
 .layup-pin{position:sticky;top:0;height:100vh;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:auto 1fr;padding:96px var(--gut) 40px;column-gap:clamp(24px,4vw,64px)}
 .layup-head{grid-column:1 / -1;position:relative;z-index:3;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
 .layup-head h2{font-size:clamp(2.4rem,5.4vw,5.6rem)}
+.mat-title .mt{transition:color .4s,opacity .4s;display:inline-block}
+.mat-title.has-active .mt{opacity:.28}
+.mat-title.has-active .mt.on{opacity:1;color:var(--y)}
+/* logo KVP in 3D (stesse forme del marchio) in piedi sul piedistallo */
+.logo3d{position:absolute;left:50%;top:50%;width:calc(var(--sw,400px)*.72);height:calc(var(--sw,400px)*.72*.48);margin-left:calc(var(--sw,400px)*-.36);margin-top:calc(var(--sw,400px)*-.72*.48);transform-style:preserve-3d;transform-origin:50% 100%;transform:translateZ(var(--lz,0px)) rotateX(-90deg);pointer-events:none}
+.logo3d svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.lshadow{position:absolute;left:50%;top:50%;width:calc(var(--sw,400px)*.8);height:calc(var(--sw,400px)*.34);margin-left:calc(var(--sw,400px)*-.4);margin-top:calc(var(--sw,400px)*-.2);background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);transform:translateZ(var(--lsz,0px));opacity:var(--lso,.8);pointer-events:none}
 .layup-head .k{order:2;text-align:right}
 .stage{position:relative;z-index:1;perspective:2200px;display:grid;place-items:center;min-height:0}
 .stack{position:relative;width:min(30vw,440px,52vh);aspect-ratio:1.3;transform-style:preserve-3d;transform:translateY(var(--sy,0px)) rotateX(60deg) rotateZ(-38deg)}
