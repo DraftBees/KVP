@@ -555,3 +555,41 @@ html{scroll-padding-top:88px}
 @media (max-width:860px) and (min-height:541px) and (prefers-reduced-motion:no-preference){
   .ply,.logo3d{transition:outline-color .3s}
 }
+
+/* Bound GPU surfaces while retaining the geometry and material lighting. */
+.stack.has-selection .logo3d svg{filter:none}
+.stack.has-selection .logo3d{--logo-shade:1}
+.stack.has-selection .logo3d svg:last-child{color:#b18a15!important}
+.stack::after{filter:none;background:radial-gradient(ellipse,rgba(0,0,0,.5),transparent 70%)}
+@media (max-width:860px){
+  .bar::before,.dock{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,13,17,.96)}
+  .panel-bg{-webkit-mask-image:none;mask-image:none}
+  .panel::after{display:block;background:linear-gradient(transparent 15%,var(--ink) 48%);pointer-events:none;z-index:1}
+  .panel{box-shadow:none}
+}
+
+.stack.scene-sleep,.panel.is-covered{visibility:hidden}
+
+.logo3d{transform:translateZ(calc(var(--lz,0px) + var(--logo-flight,0px))) rotateX(-90deg) rotateZ(var(--logo-turn,0deg))}
+.logo3d.logo-away{display:none}
+@media (prefers-reduced-motion:reduce){
+  .layup{height:auto}
+  .layup-pin{position:relative;height:auto;overflow:visible}
+  .plies li{opacity:1;visibility:visible;transform:none}
+  .layup-end{position:static;margin-top:24px}
+}
+/* WebKit needs each material to own its camera transform; a rotated shared
+   preserve-3d context can discard the upper planes on iOS. */
+html.webkit-scene .stack{transform:none!important;transform-style:flat}
+html.webkit-scene .ply{transform:translateY(calc(var(--sy,0px) - var(--z,0px)*.866)) rotateX(var(--rx,60deg)) rotateZ(var(--rz,-38deg))!important;
+  box-shadow:0 var(--th,5px) 0 var(--edge,#9c968a)}
+html.webkit-scene .ply.dim{box-shadow:0 var(--th,5px) 0 #151a20}
+html.webkit-scene .ply::before,html.webkit-scene .ply::after{display:none}
+html.webkit-scene .p0{z-index:6}html.webkit-scene .p1{z-index:5}html.webkit-scene .p2{z-index:4}html.webkit-scene .p3{z-index:3}html.webkit-scene .p4{z-index:2}html.webkit-scene .p5{z-index:1}
+html.webkit-scene .logo3d{z-index:8;transform:translateY(var(--sy,0px)) rotateX(var(--rx,60deg)) rotateZ(var(--rz,-38deg)) translateZ(calc(var(--lz,0px) + var(--logo-flight,0px))) rotateX(-90deg) rotateZ(var(--logo-turn,0deg))}
+html.webkit-scene .lshadow,html.webkit-scene .stack::after{display:none}
+
+@media (max-width:860px){
+  .panel-in{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+  .panel-bg{background:var(--ink-3)}
+}
